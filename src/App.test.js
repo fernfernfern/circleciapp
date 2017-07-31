@@ -1,8 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import React from 'react'
+import { shallow } from 'enzyme'
+import App from './App'
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-});
+it('changes the text on click', () => {
+  const wrapper = shallow(<App/>)
+  let text = wrapper.find('.text-container')
+
+  expect(text.exists()).toBe(true)
+  expect(wrapper.state('words')).toBe('')
+  wrapper.find('button').simulate('click')
+  text = wrapper.find('.text-container')
+  expect(text.text()).toBe(wrapper.state('words'))
+})

@@ -1,18 +1,31 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import words from 'random-words'
 import './App.css';
 
 class App extends Component {
+
+  constructor() {
+    super()
+
+    this.state = {
+      words: ""
+    }
+  }
+
+
+  changeText = () => {
+    this.setState({
+      words: words(5).join(' ')
+    })
+  }
+
   render() {
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+        <div className='content-container'>
+          <button className='change-button' onClick={this.changeText}>Click Me!</button>
+          <div className='text-container'>{this.state.words}</div>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
       </div>
     );
   }
