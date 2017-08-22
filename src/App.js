@@ -15,7 +15,7 @@ class App extends Component {
 
   changeText = () => {
     this.setState({
-      words: words(5).join(' ')
+      words: words(10).join(' ')
     })
   }
 
