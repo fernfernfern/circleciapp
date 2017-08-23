@@ -2,7 +2,9 @@ version: 2
 jobs:
   build:
     # Choose executor (machine | docker)
-    machine: true
+    #machine: true # This works if you don't want to configure anything else
+    machine:
+      image: circleci/classic:edge
     #docker:
       # specify the version you desire here
     #  - image: circleci/node:7.10
