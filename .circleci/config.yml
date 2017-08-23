@@ -10,6 +10,7 @@ jobs:
     branches:
       ignore:
         - notmaster
+        - alsonotmaster
         # RegEx is fine too
         #- notmast*
       # Must choose ignore or only. Not both!
