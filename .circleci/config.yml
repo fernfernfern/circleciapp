@@ -1,3 +1,5 @@
+# https://github.com/Animosity/CraftIRC/wiki/Complete-idiot%27s-introduction-to-yaml
+
 version: 2
 jobs:
   # https://circleci.com/docs/2.0/configuration-reference/#build
@@ -31,7 +33,7 @@ jobs:
         #- notmast*
       # Must choose ignore or only. Not both!
       #only:
-      #- master
+        #- master
 
     # Select the class of resources to use. Only available with docker executor.
     # Paid accounts may request this feature from their Customer Success Manager,
@@ -46,8 +48,18 @@ jobs:
       #- xlarge	 # 8.0	16GB
 
     working_directory: ~/repo
+
+    # https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
-      - checkout
+
+      # Without aditional config you can follow run with a command
+      - run: echo 'running a command'
+
+      # Additional config cans be used to customize run
+      - run:
+        name: "custom step name that shows in the circleci build UI"
+        command: echo 'this is the actual step code'
+      #- checkout
 
       - run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
       - run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
