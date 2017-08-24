@@ -1,13 +1,25 @@
 version: 2
 jobs:
+  # https://circleci.com/docs/2.0/configuration-reference/#build
   build:
     # Choose executor (machine | docker)
-    #machine: true # This works if you don't want to configure anything else
+    # https://circleci.com/docs/2.0/configuration-reference/#docker--machine-executor
+
+    #machine: true # This works if you don't want to configure anything else for machine
     machine:
+      enabled: true
       image: circleci/classic:edge
     #docker:
-      # specify the version you desire here
+        # specify the docker image and version you desire here
     #  - image: circleci/node:7.10
+
+    # Number of parallel instances of this job to run (default: 1)
+    parallelism: 2
+
+    # (NOTE: these will override any environment variables you set in the CircleCI web interface).
+    environment:
+      - MY_ENV_VAR: "Circleci is the bees knees"
+      - ANOTHER_VAR: "Who still says bees knees?"
 
     # Can be used to select or ignore specific branches when not using workflows
     # https://circleci.com/docs/2.0/configuration-reference/#branches
