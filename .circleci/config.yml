@@ -60,7 +60,7 @@ jobs:
           name: "custom step name that shows in the circleci build UI"
           command: echo 'this is the actual step code'
       - checkout:
-        path: ~/repo
+          path: ~/repo
 
       - run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
       - run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
