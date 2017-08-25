@@ -3,7 +3,7 @@
 version: 2
 jobs:
   # https://circleci.com/docs/2.0/configuration-reference/#build
-  build:
+  build-what:
     # Choose executor (machine | docker)
     # https://circleci.com/docs/2.0/configuration-reference/#docker--machine-executor
 
@@ -59,6 +59,10 @@ jobs:
       - run:
           name: "custom step name that shows in the circleci build UI"
           command: echo 'this is the actual step code'
+          # Overrides build level working_directory
+          working_directory: ~/repo
+          # Whether or not this step should run in the background (default: false)
+          background: true
 
       # https://circleci.com/docs/2.0/configuration-reference/#checkout
       #- checkout:
