@@ -55,6 +55,11 @@ jobs:
       # Without aditional config you can follow run with a command
       - run: echo 'running a command'
 
+      # Long form to choose the shell
+      - run:
+          shell: /bin/sh
+          command: echo 'running a command'
+
       # Additional config cans be used to customize run
       - run:
           name: "custom step name that shows in the circleci build UI"
