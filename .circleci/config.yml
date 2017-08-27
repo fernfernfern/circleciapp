@@ -55,9 +55,26 @@ jobs:
       # Without aditional config you can follow run with a command
       - run: echo 'running a command'
 
-      # Long form to choose the shell
       - run:
+          name: 'only on error'
+          # Can decide steps to run on_success, on_fail, or always
+          # https://circleci.com/docs/2.0/configuration-reference/#the-when-attribute
+          when: on_fail
+
+      - run:
+          # Can choose which shell to run the command
           shell: /bin/sh
+
+          environment:
+            CHEESE: FRIES
+            HOT: DOGS
+
+          # Length of time command can run without output
+          # Can define units of time with s, m, h
+          no_output_timeout: '4s'
+
+          # Working directory to run the command
+          working_directory: ~/repo
           command: echo 'running a command'
 
       # Additional config cans be used to customize run
@@ -75,6 +92,10 @@ jobs:
 
       # Checkout shorthand. path defaults to working_directory
       - checkout
+
+      - checkout:
+        # You can also provide a path, but default is working_directory
+        path: ~/repo2
 
       #- run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
       #- run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
