@@ -7,6 +7,9 @@ jobs:
     # Choose executor (machine | docker)
     # https://circleci.com/docs/2.0/configuration-reference/#docker--machine-executor
 
+    # You can set the working directory for a build
+    working_directory: ~/repo
+
     #machine: true # This works if you don't want to configure anything else for machine
     #machine:
       #enabled: true
@@ -49,8 +52,6 @@ jobs:
       #- medium+ # 3.0	6GB
       #- large	 # 4.0	8GB
       #- xlarge	 # 8.0	16GB
-
-    working_directory: ~/repo
 
     # https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
