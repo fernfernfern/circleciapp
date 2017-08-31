@@ -14,7 +14,10 @@ jobs:
     docker:
         # Specify the docker image and version you desire here
       - image: circleci/node:7.10
-
+        # Multiple images!
+      - image: circleci/mysql:5.7.18
+        tmpfs:
+          - /var/lib/mysql
     # Number of parallel instances of this job to run (default: 1)
     parallelism: 2
 
