@@ -16,7 +16,7 @@ jobs:
       #image: circleci/classic:edge
     docker:
         # Specify the docker image and version you desire here
-      - image: circleci/node:7.10
+      - image: circleci/node:8.1.4
         # Multiple images!
       - image: circleci/mysql:5.7.18
         tmpfs:
@@ -58,6 +58,7 @@ jobs:
 
       # Without aditional config you can follow run with a command
       - run: echo 'running a command'
+      - run: yarn --version
 
       - run:
           name: 'only on error'
