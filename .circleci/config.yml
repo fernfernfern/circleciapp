@@ -71,6 +71,7 @@ jobs:
           working_directory: ~/repo
           command: echo 'running a command'
 
+      - run: echo "$WORKFLOW_VAR"
 
       # Can create and store artifacts created within the build
       # https://circleci.com/docs/2.0/artifacts/#artifacts-overview
