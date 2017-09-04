@@ -83,6 +83,23 @@ jobs:
           working_directory: ~/repo
           command: echo 'running a command'
 
+
+      # Can create and store artifacts created within the build
+      # https://circleci.com/docs/2.0/artifacts/#artifacts-overview
+      - run:
+          name: Creating Dummy Artifacts
+          command: |
+            echo "my artifact file" > /tmp/artifact-1;
+            mkdir /tmp/artifacts;
+            echo "my artifact files in a dir" > /tmp/artifacts/artifact-2;
+
+      - store_artifacts:
+          path: /tmp/artifact-1
+          destination: artifact-file
+
+      - store_artifacts:
+          path: /tmp/artifacts
+
       # Additional config cans be used to customize run
       - run:
           name: "custom step name that shows in the circleci build UI"
@@ -111,4 +128,3 @@ jobs:
       # run tests!
       - run: yarn test
       - run: echo $MY_ENV_VAR && echo $ANOTHER_VAR
-      
