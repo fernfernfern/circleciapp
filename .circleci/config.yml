@@ -29,18 +29,6 @@ jobs:
       - MY_ENV_VAR: "Circleci is the bees knees"
       - ANOTHER_VAR: "Who still says bees knees?"
 
-    # Can be used to select or ignore specific branches when not using workflows
-    # https://circleci.com/docs/2.0/configuration-reference/#branches
-    branches:
-      ignore:
-        - notmaster
-        - alsonotmaster
-        # RegEx is fine too
-        #- notmast*
-      # Must choose ignore or only. Not both!
-      #only:
-        #- master
-
     # Select the class of resources to use. Only available with docker executor.
     # Paid accounts may request this feature from their Customer Success Manager,
     # non-paid users may request to get started by sending email to support@circleci.com.
