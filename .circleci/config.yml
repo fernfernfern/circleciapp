@@ -96,18 +96,6 @@ jobs:
           working_directory: ~/repo
           # Whether or not this step should run in the background (default: false)
           background: true
-
-      # https://circleci.com/docs/2.0/configuration-reference/#checkout
-      #- checkout:
-      #    path: ~/repo
-
-      # Checkout shorthand. path defaults to working_directory
-      - checkout
-
-      - checkout:
-          # You can also provide a path, but default is working_directory
-          path: ~/repo2
-
   test:
 
     docker:
@@ -117,6 +105,9 @@ jobs:
           - /var/lib/node
 
     steps:
+      # Checkout shorthand. path defaults to working_directory
+      - checkout
+
       #- run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
       #- run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
       #- run: sudo apt-get update && sudo apt-get install yarn -y
