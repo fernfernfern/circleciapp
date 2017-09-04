@@ -99,7 +99,7 @@ jobs:
 
       - store_artifacts:
           path: /tmp/artifacts
- 
+
       # Additional config cans be used to customize run
       - run:
           name: "custom step name that shows in the circleci build UI"
@@ -120,6 +120,7 @@ jobs:
           # You can also provide a path, but default is working_directory
           path: ~/repo2
 
+  test:
       #- run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
       #- run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
       #- run: sudo apt-get update && sudo apt-get install yarn -y
@@ -128,3 +129,10 @@ jobs:
       # run tests!
       - run: yarn test
       - run: echo $MY_ENV_VAR && echo $ANOTHER_VAR
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test
