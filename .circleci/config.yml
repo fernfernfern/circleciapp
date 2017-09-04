@@ -97,7 +97,6 @@ jobs:
           # Whether or not this step should run in the background (default: false)
           background: true
   test:
-    context: org-global
     docker:
         # Specify the docker image and version you desire here
       - image: circleci/node:8.1.4
@@ -121,5 +120,6 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - build
+      - build:
+          context: org-global
       - test
