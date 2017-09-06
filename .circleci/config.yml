@@ -101,7 +101,6 @@ jobs:
           path: /tmp/artifacts
 
       - run: echo $CIRCLE_WORKING_DIRECTORY
-      - run: find $CIRCLE_WORKING_DIRECTORY -exec echo lol
 
       # Additional config cans be used to customize run
       - run:
