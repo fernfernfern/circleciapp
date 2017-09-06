@@ -99,7 +99,9 @@ jobs:
 
       - store_artifacts:
           path: /tmp/artifacts
- 
+
+      - run: echo $CIRCLE_WORKING_DIRECTORY
+
       # Additional config cans be used to customize run
       - run:
           name: "custom step name that shows in the circleci build UI"
