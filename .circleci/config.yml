@@ -89,7 +89,7 @@ jobs:
 
       - run:
           name: Unpack something!
-          command: tar -xvzf heroku-linux-amd64.tar.gz -C /usr/local/lib
+          command: sudo tar -xvzf heroku-linux-amd64.tar.gz -C /usr/local/lib
 
       # Can create and store artifacts created within the build
       # https://circleci.com/docs/2.0/artifacts/#artifacts-overview
