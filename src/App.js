@@ -20,6 +20,8 @@ class App extends Component {
   }
 
   render() {
+
+    console.log('random change!')
     return (
       <div className="App">
         <div className='content-container'>
