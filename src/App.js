@@ -25,7 +25,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className='content-container'>
-          <button className='change-button' onClick={this.changeText}>Click Me!</button>
+          <button className='change-button' onClick={this.changeText}>Click Me, Amadeus!</button>
           <div className='text-container'>{this.state.words}</div>
         </div>
       </div>
