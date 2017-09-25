@@ -21,7 +21,7 @@ class App extends Component {
 
   render() {
 
-    console.log('random nge!')
+    console.log('say what now?')
     return (
       <div className="App">
         <div className='content-container'>
