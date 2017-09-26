@@ -141,5 +141,8 @@ jobs:
       - run: yarn install
 
       # run tests!
-      - run: yarn test
+      - run: mkdir test-reports
+      - run: yarn test:ci
+      - store_test_results:
+          path: test-reports/
       - run: echo $MY_ENV_VAR && echo $ANOTHER_VAR
