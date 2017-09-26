@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "dev": "^0.1.3",
+    "jest-junit": "^3.0.0",
     "random-words": "^0.0.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
