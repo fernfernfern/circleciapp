@@ -144,8 +144,8 @@ jobs:
       - run: mkdir test-reports
       - run: yarn test:ci
       - store_artifacts:
-          path: /code/test-results
+          path: /
           destination: test
       - store_test_results:
-          path: /code/test-results
+          path: /
       - run: echo $MY_ENV_VAR && echo $ANOTHER_VAR
