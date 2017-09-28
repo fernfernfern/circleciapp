@@ -18,6 +18,9 @@ jobs:
         # Specify the docker image and version you desire here
       - image: circleci/node:8.1.4
       - image: circleci/cassandra:3.10
+        tmpfs:
+          - /var/lib/cassandra
+
         # Multiple images!
       - image: circleci/mysql:5.7.18
         tmpfs:
