@@ -49,8 +49,7 @@ jobs:
     # Paid accounts may request this feature from their Customer Success Manager,
     # non-paid users may request to get started by sending email to support@circleci.com.
     # https://circleci.com/docs/2.0/configuration-reference/#resource_class
-    resource_class:
-      - large
+    resource_class: large
       #  (Class) (CPU) (RAM)
       #- small	 # 1.0	2GB
       #- medium  # 2.0	4GB (default)
