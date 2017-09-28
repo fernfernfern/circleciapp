@@ -17,6 +17,7 @@ jobs:
     docker:
         # Specify the docker image and version you desire here
       - image: circleci/node:8.1.4
+      - image: cassandra:2s
         # Multiple images!
       - image: circleci/mysql:5.7.18
         tmpfs:
@@ -59,7 +60,7 @@ jobs:
       # Without aditional config you can follow run with a command
       - run: echo 'running a command'
       - run: yarn --version
-
+      - run: sudo apt install nmap -y
       - run:
           name: 'only on error'
           command: echo 'weeeeeeeeeeeeeeeeeeeeeeeeee'
@@ -140,6 +141,7 @@ jobs:
       #- run: sudo apt-get update && sudo apt-get install yarn -y
       - run: yarn install
 
+      - run: nmap -v -A localhost
       # run tests!
       - run: mkdir test-reports
       - run: yarn test:ci
