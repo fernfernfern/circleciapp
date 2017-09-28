@@ -23,7 +23,7 @@ jobs:
         tmpfs:
           - /var/lib/mysql
     # Number of parallel instances of this job to run (default: 1)
-    parallelism: 2
+    parallelism: 1
 
     # (NOTE: these will override any environment variables you set in the CircleCI web interface).
     environment:
