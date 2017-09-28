@@ -50,9 +50,10 @@ jobs:
     # non-paid users may request to get started by sending email to support@circleci.com.
     # https://circleci.com/docs/2.0/configuration-reference/#resource_class
     resource_class:
+      - large
       #  (Class) (CPU) (RAM)
       #- small	 # 1.0	2GB
-      - medium   # 2.0	4GB (default)
+      #- medium  # 2.0	4GB (default)
       #- medium+ # 3.0	6GB
       #- large	 # 4.0	8GB
       #- xlarge	 # 8.0	16GB
