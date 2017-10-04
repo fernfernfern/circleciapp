@@ -169,7 +169,7 @@ jobs:
       # run tests!
       - run: mkdir test-reports
       - run: yarn test:ci
-      - run: mv *.xml ./test-reports/
+      # - run: mv *.xml ./test-reports/
       - store_artifacts:
           path: ./test-reports
           destination: test
