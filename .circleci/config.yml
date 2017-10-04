@@ -115,9 +115,10 @@ jobs:
             mkdir /tmp/artifacts;
             echo "my artifact files in a dir" > /tmp/artifacts/artifact-2;
 
-      - run: |
-        echo "waaaaaa"
-        mkdir $WORKING_DIRECTORY/lol
+      - run:
+          command: |
+            echo "waaaaaa"
+            mkdir $WORKING_DIRECTORY/lol
 
       - run: export
 
