@@ -1,7 +1,0 @@
-machine:
-  environment:
-    NODE_ENV: development
-
-dependencies:
-  override:
-    - npm install -{NODE_ENV} client/ 
