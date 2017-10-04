@@ -124,6 +124,10 @@ jobs:
       - store_artifacts:
           path: /tmp/artifacts
 
+      - store_artifacts:
+          path: /tmp/artifacts
+          destination: folderrrrr
+
       - run: echo $CIRCLE_WORKING_DIRECTORY
 
       - run: |
