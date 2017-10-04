@@ -70,7 +70,7 @@ jobs:
       # Without aditional config you can follow run with a command
       - run: echo 'running a command'
       - run: yarn --version
-      - run: sudo apt install libpq5 nmap postgresql-client-9.6 -y
+      - run: sudo apt install nmap postgresql-client -y
       - run:
           name: 'only on error'
           command: echo 'weeeeeeeeeeeeeeeeeeeeeeeeee'
