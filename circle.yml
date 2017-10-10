@@ -4,5 +4,4 @@ machine:
 
 dependencies:
   override:
-    - echo ${NODE_ENV}
-    - npm install --${NODE_ENV}
+    - npm install jest
