@@ -5,3 +5,4 @@ machine:
 dependencies:
   override:
     - npm install jest
+    - sudo apt-get install htop
