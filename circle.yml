@@ -5,4 +5,8 @@ machine:
 dependencies:
   override:
     - npm install jest
-    - sudo apt-get install htop
+    - sudo apt-get update
+
+test:
+  override:
+    - echo no
