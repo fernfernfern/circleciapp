@@ -18,7 +18,7 @@ jobs:
     #machine:
       #enabled: true
       #image: circleci/classic:edge
-    docker:
+    machine:
         # Specify the docker image and version you desire here
       - image: circleci/ruby:2.4.1-node-browsers
         environment:
