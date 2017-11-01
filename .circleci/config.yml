@@ -169,7 +169,7 @@ jobs:
       # Checkout shorthand. path defaults to working_directory
       - checkout
 
-      - run: export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 $CIRCLE_SHA1)
+      - run: echo export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 $CIRCLE_SHA1) >> ~/.bashrc
       - run: echo $GIT_COMMIT_DESC
 
       #- checkout:
