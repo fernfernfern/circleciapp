@@ -46,7 +46,6 @@ jobs:
 
       # Without aditional config you can follow run with a command
       - run: echo 'running a command'
-      - run: yarn --version
       - run: sudo apt install nmap postgresql-client -y
       - run:
           name: 'only on error'
