@@ -46,7 +46,6 @@ jobs:
 
       # Without aditional config you can follow run with a command
       - run: echo 'running a command'
-      - run: sudo apt install nmap postgresql-client -y
       - run:
           name: 'only on error'
           command: echo 'weeeeeeeeeeeeeeeeeeeeeeeeee'
@@ -111,20 +110,6 @@ jobs:
 
       - run: echo $CIRCLE_WORKING_DIRECTORY
 
-      - run: |
-          psql \
-          -d $DATABASE_URL \
-          -c "CREATE TABLE test (name char(25));"
-      - run: |
-          psql \
-          -d $DATABASE_URL \
-          -c "INSERT INTO test (name) VALUES ('fern')"
-      - run: |
-          psql \
-          -d $DATABASE_URL \
-          -c "SELECT * from test"
-
-
       # Additional config cans be used to customize run
       - run:
           name: "custom step name that shows in the circleci build UI"
@@ -151,12 +136,9 @@ jobs:
       #- run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
       #- run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
       #- run: sudo apt-get update && sudo apt-get install yarn -y
-      - run: yarn install
 
-      - run: nmap -v -A localhost
       # run tests!
       - run: mkdir test-reports
-      - run: yarn test:ci
       # - run: mv *.xml ./test-reports/
       - store_artifacts:
           path: ./test-reports
