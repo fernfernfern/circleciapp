@@ -73,7 +73,7 @@ jobs:
 
       # Without aditional config you can follow run with a command
       - run: echo 'running a command'
-      - run: export GIT_COMMIT_DESC=git log --format=oneline -n 1 $CIRCLE_SHA1
+      - run: export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 $CIRCLE_SHA1)
       - run: echo $GIT_COMMIT_DESC
       - run: yarn --version
       - run: sudo apt install nmap postgresql-client -y
