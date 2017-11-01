@@ -73,10 +73,6 @@ jobs:
 
       # Without aditional config you can follow run with a command
       - run: echo 'running a command'
-      - run:
-          command: export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 $CIRCLE_SHA1)
-          working_directory: ~/repo
-      - run: echo $GIT_COMMIT_DESC
       - run: yarn --version
       - run: sudo apt install nmap postgresql-client -y
       - run:
@@ -172,6 +168,9 @@ jobs:
 
       # Checkout shorthand. path defaults to working_directory
       - checkout
+
+      - run: export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 $CIRCLE_SHA1)
+      - run: echo $GIT_COMMIT_DESC
 
       #- checkout:
           # You can also provide a path, but default is working_directory
