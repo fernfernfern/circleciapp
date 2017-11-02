@@ -50,7 +50,6 @@ jobs:
             echo root soft nofile 500000 | sudo tee --append /etc/security/limits.conf
             echo circleci hard nofile 500000 | sudo tee --append /etc/security/limits.conf
             echo circleci soft nofile 500000 | sudo tee --append /etc/security/limits.conf
-            ulimit -n 500000
 
       # Without aditional config you can follow run with a command
       - run: echo 'running a command'
