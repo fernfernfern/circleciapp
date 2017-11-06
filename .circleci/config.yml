@@ -194,3 +194,9 @@ jobs:
       - store_test_results:
           path: ./test-reports
       - run: echo $MY_ENV_VAR && echo $ANOTHER_VAR
+
+workflows:
+  version: 2
+  do_the_dang_thang:
+    jobs:
+      - build
