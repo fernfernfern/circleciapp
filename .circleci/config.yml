@@ -110,6 +110,8 @@ jobs:
           name: clean up!
           command: rm -rf heroku-linux-amd64*
 
+      - run: ps -aux | grep ssh
+
       # Can create and store artifacts created within the build
       # https://circleci.com/docs/2.0/artifacts/#artifacts-overview
       - run:
