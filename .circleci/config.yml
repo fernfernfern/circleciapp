@@ -1,190 +1,21 @@
-# https://github.com/Animosity/CraftIRC/wiki/Complete-idiot%27s-introduction-to-yaml
-
 version: 2
 jobs:
-  # https://circleci.com/docs/2.0/configuration-reference/#build
-  wbuild:
-    # Choose executor (machine | docker)
-    # https://circleci.com/docs/2.0/configuration-reference/#docker--machine-executor
-
-    # tags are ignored by default. you have to enable them
-    tags:
-      only: tagged
-
-    # You can set the working directory for a build
-    working_directory: ~/repo
-
-    #machine: true # This works if you don't want to configure anything else for machine
-    #machine:
-      #enabled: true
-      #image: circleci/classic:edge
+  build:
+    working_directory: /build
     docker:
-        # Specify the docker image and version you desire here
-      - image: circleci/ruby:2.4.1-node-browsers
-        environment:
-          RAILS_ENV: test
-          PGHOST: 127.0.0.1
-          DATABASE_URL: postgres://root@127.0.0.1/circle_test
-      - image: circleci/node:6.10.2
-      - image: cassandra:2
-
-      - image: circleci/postgres:9.6-alpine
-        POSTGRES_DB: circle_test
-        POSTGRES_USER: root
-
-        # Multiple images!
-      - image: circleci/mysql:5.7.18
-        tmpfs:
-          - /var/lib/mysql
-    # Number of parallel instances of this job to run (default: 1)
-    parallelism: 1
-
-    # (NOTE: these will override any environment variables you set in the CircleCI web interface).
-    environment:
-      - MY_ENV_VAR: "Circleci is the bees knees"
-      - ANOTHER_VAR: "Who still says bees knees?"
-
-    # Select the class of resources to use. Only available with docker executor.
-    # Paid accounts may request this feature from their Customer Success Manager,
-    # non-paid users may request to get started by sending email to support@circleci.com.
-    # https://circleci.com/docs/2.0/configuration-reference/#resource_class
-    resource_class: large
-      #  (Class) (CPU) (RAM)
-      #- small	 # 1.0	2GB
-      #- medium  # 2.0	4GB (default)
-      #- medium+ # 3.0	6GB
-      #- large	 # 4.0	8GB
-      #- xlarge	 # 8.0	16GB
-
-    # https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: jacobwoffenden/rpmbuilder:latest
     steps:
-
-      # Without aditional config you can follow run with a command
-      - run: echo 'running a command'
-      - run: yarn --version
-      - run: sudo apt install nmap postgresql-client -y
-      - run:
-          name: 'only on error'
-          command: echo 'weeeeeeeeeeeeeeeeeeeeeeeeee'
-          # Can decide steps to run on_success, on_fail, or always
-          # https://circleci.com/docs/2.0/configuration-reference/#the-when-attribute
-          when: on_fail
-
-      - run:
-          # Can choose which shell to run the command
-          shell: /bin/sh
-
-          environment:
-            CHEESE: FRIES
-            HOT: DOGS
-
-          # Length of time command can run without output
-          # Can define units of time with s, m, h
-          no_output_timeout: '4s'
-
-          # Working directory to run the command
-          working_directory: ~/repo
-          command: echo 'running a command'
-
-      - run:
-          name: Download something!
-          command: wget https://cli-assets.heroku.com/branches/stable/heroku-linux-amd64.tar.gz
-
-      - run:
-          name: Unpack something!
-          command: sudo tar -xvzf heroku-linux-amd64.tar.gz -C /usr/local/lib
-
-      - run:
-          name: clean up!
-          command: rm -rf heroku-linux-amd64*
-
-      - run: ps -aux | grep ssh
-
-      # Can create and store artifacts created within the build
-      # https://circleci.com/docs/2.0/artifacts/#artifacts-overview
-      - run:
-          name: Creating Dummy Artifacts
-          command: |
-            echo "my artifact file" > /tmp/artifact-1;
-            mkdir /tmp/artifacts;
-            echo "my artifact files in a dir" > /tmp/artifacts/artifact-2;
-
-      - run:
-          command: |
-            echo "waaaaaa"
-            sudo mkdir $WORKING_DIRECTORY/lol
-
-      - run: export
-
-      - store_artifacts:
-          path: /tmp/artifact-1
-          destination: artifact-file
-
-      - store_artifacts:
-          path: /tmp/artifacts
-
-      - store_artifacts:
-          path: /tmp/artifacts
-          destination: folderrrrr
-
-      - run: echo $CIRCLE_WORKING_DIRECTORY
-
-      - run: |
-          psql \
-          -d $DATABASE_URL \
-          -c "CREATE TABLE test (name char(25));"
-      - run: |
-          psql \
-          -d $DATABASE_URL \
-          -c "INSERT INTO test (name) VALUES ('fern')"
-      - run: |
-          psql \
-          -d $DATABASE_URL \
-          -c "SELECT * from test"
-
-
-      # Additional config cans be used to customize run
-      - run:
-          name: "custom step name that shows in the circleci build UI"
-          command: echo 'this is the actual step code'
-          # Overrides build level working_directory
-          working_directory: ~/repo
-          # Whether or not this step should run in the background (default: false)
-          background: true
-
-      # https://circleci.com/docs/2.0/configuration-reference/#checkout
-      #- checkout:
-      #    path: ~/repo
-
-      # Checkout shorthand. path defaults to working_directory
       - checkout
-
-      - run: echo export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 $CIRCLE_SHA1) >> ~/.bashrc
-      - run: echo $GIT_COMMIT_DESC
-
-      #- checkout:
-          # You can also provide a path, but default is working_directory
-          #sspath: ~/repo2
-
-      #- run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-      #- run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-      #- run: sudo apt-get update && sudo apt-get install yarn -y
-      - run: yarn install
-
-      - run: nmap -v -A localhost
-      # run tests!
-      - run: mkdir test-reports
-      - run: yarn test:ci
-      # - run: mv *.xml ./test-reports/
-      - store_artifacts:
-          path: ./test-reports
-          destination: test
-      - store_test_results:
-          path: ./test-reports
-      - run: echo $MY_ENV_VAR && echo $ANOTHER_VAR
-
+      - run:
+          name: Building RPM
+          command: echo lol
 workflows:
   version: 2
-  do_the_dang_thang:
+  build:
     jobs:
-      - wbuild
+      - build:
+          context: org-global
+          filters:
+            branches:
+              only:
+                - master
