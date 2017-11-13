@@ -14,10 +14,10 @@ workflows:
   build_workflow:
     triggers:
       - schedule:
-          cron: "1 * * * *"
+          cron: "10 * * * *"
           filters:
             branches:
               only:
-                - /.*/
+                - workflows
     jobs:
       - build
