@@ -18,6 +18,6 @@ workflows:
           filters:
             branches:
               only:
-                - workflows
+                - /.*/
     jobs:
       - build
