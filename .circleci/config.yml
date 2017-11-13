@@ -20,7 +20,7 @@ jobs:
       #image: circleci/classic:edge
     docker:
         # Specify the docker image and version you desire here
-      - image: circleci/ruby:2.4.1-node-browsers
+      - image: "circleci/ruby:2.4.1-node-browsers:${CIRCLE_BRANCH//[^a-zA-Z]}"
         environment:
           RAILS_ENV: test
           PGHOST: 127.0.0.1
