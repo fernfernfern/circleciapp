@@ -1,20 +1,26 @@
 version: 2
 jobs:
   build:
-    working_directory: /build
     docker:
-      - image: jacobwoffenden/rpmbuilder:latest
+      - image: circleci/python
     steps:
       - checkout
       - run:
           name: Building RPM
           command: echo lol
-          
+
 workflows:
   version: 2
   build:
+    triggers:
+      - schedule:
+          cron: "10 * * * *"
+          filters:
+            branches:
+              only: workflows
     jobs:
       - build:
+
           context: org-global
           filters:
             branches:
