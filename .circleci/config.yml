@@ -9,6 +9,7 @@ jobs:
       - run:
           name: Building RPM
           command: echo lol
+          
 workflows:
   version: 2
   build:
