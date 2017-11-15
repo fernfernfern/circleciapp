@@ -12,6 +12,7 @@ jobs:
       - store_artifacts:
           path: ~/project/lol
       - run: sleep 5
+      - run: exit 1
   build2:
     docker:
       - image: circleci/python
