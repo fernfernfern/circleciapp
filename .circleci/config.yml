@@ -11,6 +11,7 @@ jobs:
           command: echo lol > lolfile1
       - store_artifacts:
           path: ~/project/lol
+      - run: exit 1
   build2:
     docker:
       - image: circleci/python
