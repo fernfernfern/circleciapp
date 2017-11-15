@@ -29,8 +29,8 @@ workflows:
     jobs:
       - build1
       - build2:
-        - requires:
-          - build1
+          requires:
+            - build1
 
   schedule_workflow:
     triggers:
