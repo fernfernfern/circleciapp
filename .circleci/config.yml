@@ -11,6 +11,7 @@ jobs:
     steps:
       - run: sleep 60
 workflows:
+  version: 2
   work-the-flows:
     jobs:
       - macos-job
