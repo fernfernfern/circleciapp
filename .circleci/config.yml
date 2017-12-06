@@ -1,126 +1,17 @@
-# https://github.com/Animosity/CraftIRC/wiki/Complete-idiot%27s-introduction-to-yaml
-
 version: 2
 jobs:
-  # https://circleci.com/docs/2.0/configuration-reference/#build
-  build:
-    # Choose executor (machine | docker)
-    # https://circleci.com/docs/2.0/configuration-reference/#docker--machine-executor
-
-    # You can set the working directory for a build
-    working_directory: ~/repo
-
-    #machine: true # This works if you don't want to configure anything else for machine
-    #machine:
-      #enabled: true
-      #image: circleci/classic:edge
+  linux-job:
     docker:
-        # Specify the docker image and version you desire here
-      - image: circleci/node:8.1.4
-        # Multiple images!
-      - image: circleci/mysql:5.7.18
-        tmpfs:
-          - /var/lib/mysql
-    # Number of parallel instances of this job to run (default: 1)
-    parallelism: 2
-
-    # (NOTE: these will override any environment variables you set in the CircleCI web interface).
-    environment:
-      - MY_ENV_VAR: "Circleci is the bees knees"
-      - ANOTHER_VAR: "Who still says bees knees?"
-
-    # Select the class of resources to use. Only available with docker executor.
-    # Paid accounts may request this feature from their Customer Success Manager,
-    # non-paid users may request to get started by sending email to support@circleci.com.
-    # https://circleci.com/docs/2.0/configuration-reference/#resource_class
-    resource_class:
-      #  (Class) (CPU) (RAM)
-      #- small	 # 1.0	2GB
-      - medium   # 2.0	4GB (default)
-      #- medium+ # 3.0	6GB
-      #- large	 # 4.0	8GB
-      #- xlarge	 # 8.0	16GB
-
-    # https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: circleci/python
     steps:
-
-      # Without aditional config you can follow run with a command
-      - run: echo 'running a command'
-      - run: yarn --version
-
-      - run:
-          name: 'only on error'
-          command: echo 'weeeeeeeeeeeeeeeeeeeeeeeeee'
-          # Can decide steps to run on_success, on_fail, or always
-          # https://circleci.com/docs/2.0/configuration-reference/#the-when-attribute
-          when: on_fail
-
-      - run:
-          # Can choose which shell to run the command
-          shell: /bin/sh
-
-          environment:
-            CHEESE: FRIES
-            HOT: DOGS
-
-          # Length of time command can run without output
-          # Can define units of time with s, m, h
-          no_output_timeout: '4s'
-
-          # Working directory to run the command
-          working_directory: ~/repo
-          command: echo 'running a command'
-
-      - run: echo "$WORKFLOW_VAR"
-
-      # Can create and store artifacts created within the build
-      # https://circleci.com/docs/2.0/artifacts/#artifacts-overview
-      - run:
-          name: Creating Dummy Artifacts
-          command: |
-            echo "my artifact file" > /tmp/artifact-1;
-            mkdir /tmp/artifacts;
-            echo "my artifact files in a dir" > /tmp/artifacts/artifact-2;
-
-      - store_artifacts:
-          path: /tmp/artifact-1
-          destination: artifact-file
-
-      - store_artifacts:
-          path: /tmp/artifacts
-
-      # Additional config cans be used to customize run
-      - run:
-          name: "custom step name that shows in the circleci build UI"
-          command: echo 'this is the actual step code'
-          # Overrides build level working_directory
-          working_directory: ~/repo
-          # Whether or not this step should run in the background (default: false)
-          background: true
-  test:
-    docker:
-        # Specify the docker image and version you desire here
-      - image: circleci/node:8.1.4
-        tmpfs:
-          - /var/lib/node
-
+      - run: sleep 60
+  macos-job:
+    macos:
+      xcode: "9.1.0"
     steps:
-      # Checkout shorthand. path defaults to working_directory
-      - checkout
-
-      #- run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-      #- run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-      #- run: sudo apt-get update && sudo apt-get install yarn -y
-      - run: yarn install
-
-      # run tests!
-      - run: yarn test
-      - run: echo $MY_ENV_VAR && echo $ANOTHER_VAR
-
+      - run: sleep 60
 workflows:
-  version: 2
-  build_and_test:
+  work-the-flows:
     jobs:
-      - build:
-          context: org-global
-      - test
+      - macos-job
+      - linux-job
