@@ -8,6 +8,11 @@ jobs:
     <<: *image
     steps:
       - run: mkdir lol
+      - run: echo "Hello, world!" > workspace/echo-output
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - echo-output
   build2:
     <<: *image
     steps:
@@ -24,6 +29,9 @@ jobs:
     <<: *image
     steps:
       - run: mkdir lol
+      - run: return 1
+      - attach_workspace:
+          at: /tmp/workspace
 
 
 workflows:
