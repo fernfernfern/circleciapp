@@ -1,6 +1,6 @@
 image: &image
   docker:
-    - image: circleci/php:7-apache-node-brosers
+    - image: circleci/php:7-apache-node-browsers
 
 version: 2
 jobs:
