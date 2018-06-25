@@ -1,10 +1,10 @@
-image: &image
-  docker:
-    - image: circleci/php:7-apache-node-browsers
-
-version: 2
-jobs:
-  build:
-    <<: *image
+  dev_hockey:
+    macos:
+      xcode: "9.2.0"
+    environment:
+      - LC_CTYPE: en_US.UTF-8
+      - LANG: en_US.UTF-8
+      - FL_OUTPUT_DIR: output
     steps:
-      - run: export
+      - checkout
+      ruby --version
