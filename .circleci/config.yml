@@ -1,4 +1,7 @@
-  dev_hockey:
+version: 2
+
+jobs:
+  build:
     macos:
       xcode: "9.2.0"
     environment:
