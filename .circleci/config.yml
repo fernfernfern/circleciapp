@@ -10,4 +10,4 @@ jobs:
       - FL_OUTPUT_DIR: output
     steps:
       - checkout
-      ruby --version
+      - run: ruby --version
