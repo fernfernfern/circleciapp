@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     docker:
-      image: circleci/node
+      - image: circleci/node
     steps:
       - checkout
       - run: npm install -g yarn
