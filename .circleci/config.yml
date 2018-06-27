@@ -6,5 +6,4 @@ jobs:
       - image: circleci/node
     steps:
       - checkout
-      - run: npm install -g yarn
       - run: yarn install
