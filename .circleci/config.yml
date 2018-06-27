@@ -2,12 +2,9 @@ version: 2
 
 jobs:
   build:
-    macos:
-      xcode: "9.2.0"
-    environment:
-      - LC_CTYPE: en_US.UTF-8
-      - LANG: en_US.UTF-8
-      - FL_OUTPUT_DIR: output
+    docker:
+      image: circleci/node
     steps:
       - checkout
-      - run: ruby --version
+      - run: npm install -g yarn
+      - run: yarn install
