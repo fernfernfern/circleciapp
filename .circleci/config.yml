@@ -59,7 +59,7 @@ jobs:
       # Without aditional config you can follow run with a command
       - run: echo 'running a command'
       - run: yarn --version
-
+      - setup_remote_docker
       - run:
           name: 'only on error'
           command: echo 'weeeeeeeeeeeeeeeeeeeeeeeeee'
