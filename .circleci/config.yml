@@ -1,60 +1,11 @@
-# https://github.com/Animosity/CraftIRC/wiki/Complete-idiot%27s-introduction-to-yaml
-
 version: 2
+
 jobs:
-  # https://circleci.com/docs/2.0/configuration-reference/#build
   build:
-    # Choose executor (machine | docker)
-    # https://circleci.com/docs/2.0/configuration-reference/#docker--machine-executor
-
-    # You can set the working directory for a build
-    working_directory: ~/repo
-
-    #machine: true # This works if you don't want to configure anything else for machine
-    #machine:
-      #enabled: true
-      #image: circleci/classic:edge
     docker:
-        # Specify the docker image and version you desire here
-      - image: circleci/node:8.1.4
-        # Multiple images!
-      - image: circleci/mysql:5.7.18
-        tmpfs:
-          - /var/lib/mysql
-    # Number of parallel instances of this job to run (default: 1)
-    parallelism: 2
-
-    # (NOTE: these will override any environment variables you set in the CircleCI web interface).
-    environment:
-      - MY_ENV_VAR: "Circleci is the bees knees"
-      - ANOTHER_VAR: "Who still says bees knees?"
-
-    # Can be used to select or ignore specific branches when not using workflows
-    # https://circleci.com/docs/2.0/configuration-reference/#branches
-    branches:
-      ignore:
-        - notmaster
-        - alsonotmaster
-        # RegEx is fine too
-        #- notmast*
-      # Must choose ignore or only. Not both!
-      #only:
-        #- master
-
-    # Select the class of resources to use. Only available with docker executor.
-    # Paid accounts may request this feature from their Customer Success Manager,
-    # non-paid users may request to get started by sending email to support@circleci.com.
-    # https://circleci.com/docs/2.0/configuration-reference/#resource_class
-    resource_class:
-      #  (Class) (CPU) (RAM)
-      #- small	 # 1.0	2GB
-      - medium   # 2.0	4GB (default)
-      #- medium+ # 3.0	6GB
-      #- large	 # 4.0	8GB
-      #- xlarge	 # 8.0	16GB
-
-    # https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: circleci/node
     steps:
+<<<<<<< HEAD
 
       # Without aditional config you can follow run with a command
       - run: echo 'running a command'
@@ -129,17 +80,7 @@ jobs:
       #    path: ~/repo
 
       # Checkout shorthand. path defaults to working_directory
+=======
+>>>>>>> 28e174f9cf9a660d4130233ce2b52d30804ef64a
       - checkout
-
-      - checkout:
-          # You can also provide a path, but default is working_directory
-          path: ~/repo2
-
-      #- run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-      #- run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-      #- run: sudo apt-get update && sudo apt-get install yarn -y
       - run: yarn install
-
-      # run tests!
-      - run: yarn test
-      - run: echo $MY_ENV_VAR && echo $ANOTHER_VAR
