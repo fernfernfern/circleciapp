@@ -5,11 +5,9 @@ jobs:
     docker:
       - image: circleci/node
     steps:
-<<<<<<< HEAD
 
       # Without aditional config you can follow run with a command
       - run: echo 'running a command'
-      - run: yarn --version
       - setup_remote_docker
       - run:
           name: 'only on error'
@@ -80,7 +78,5 @@ jobs:
       #    path: ~/repo
 
       # Checkout shorthand. path defaults to working_directory
-=======
->>>>>>> 28e174f9cf9a660d4130233ce2b52d30804ef64a
       - checkout
       - run: yarn install
