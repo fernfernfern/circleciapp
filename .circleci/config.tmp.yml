@@ -1,0 +1,9 @@
+version: 2.0
+jobs:
+ build:
+  docker:
+    - image: circleci/node
+  steps:
+    - run:
+        shell: /bin/bash --login
+        command: echo "lol"
