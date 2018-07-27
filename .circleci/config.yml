@@ -1,82 +1,35 @@
-version: 2
-
+version: 2.0
 jobs:
-  build:
-    docker:
-      - image: circleci/node
-    steps:
+ build:
+  docker:
+    - image: dolomitedex/buildcontainer:latest
+  steps:
+    - run: dmesg | grep -in mem
 
-      # Without aditional config you can follow run with a command
-      - run: echo 'running a command'
-      - setup_remote_docker
-      - run:
-          name: 'only on error'
-          command: echo 'weeeeeeeeeeeeeeeeeeeeeeeeee'
-          # Can decide steps to run on_success, on_fail, or always
-          # https://circleci.com/docs/2.0/configuration-reference/#the-when-attribute
-          when: on_fail
+ test1:
+  docker:
+    - image: dolomitedex/buildcontainer:latest
+  steps:
+    - run: dmesg | grep -in mem
 
-      - run:
-          # Can choose which shell to run the command
-          shell: /bin/sh
+ deploy:
+  docker:
+    - image: dolomitedex/buildcontainer:latest
+  steps:
+    - run: dmesg | grep -in mem
 
-          environment:
-            CHEESE: FRIES
-            HOT: DOGS
-
-          # Length of time command can run without output
-          # Can define units of time with s, m, h
-          no_output_timeout: '4s'
-
-          # Working directory to run the command
-          working_directory: ~/repo
-          command: echo 'running a command'
-
-      - run:
-          name: Download something!
-          command: wget https://cli-assets.heroku.com/branches/stable/heroku-linux-amd64.tar.gz
-
-      - run:
-          name: Unpack something!
-          command: sudo tar -xvzf heroku-linux-amd64.tar.gz -C /usr/local/lib
-
-      - run:
-          name: clean up!
-          command: rm -rf heroku-linux-amd64*
-
-      # Can create and store artifacts created within the build
-      # https://circleci.com/docs/2.0/artifacts/#artifacts-overview
-      - run:
-          name: Creating Dummy Artifacts
-          command: |
-            echo "my artifact file" > /tmp/artifact-1;
-            mkdir /tmp/artifacts;
-            echo "my artifact files in a dir" > /tmp/artifacts/artifact-2;
-
-      - run: export
-
-      - store_artifacts:
-          path: /tmp/artifact-1
-          destination: artifact-file
-
-      - store_artifacts:
-          path: /tmp/artifacts
-
-      - run: echo $CIRCLE_WORKING_DIRECTORY
-
-      # Additional config cans be used to customize run
-      - run:
-          name: "custom step name that shows in the circleci build UI"
-          command: echo 'this is the actual step code'
-          # Overrides build level working_directory
-          working_directory: ~/repo
-          # Whether or not this step should run in the background (default: false)
-          background: true
-
-      # https://circleci.com/docs/2.0/configuration-reference/#checkout
-      #- checkout:
-      #    path: ~/repo
-
-      # Checkout shorthand. path defaults to working_directory
-      - checkout
-      - run: yarn install
+workflows:
+  version: 2
+  wat:
+    jobs:
+      - build
+      - test1:
+          requires:
+            - build
+      - hold:
+          type: approval
+          requires:
+           - test1
+      - deploy:
+          requires:
+            - hold
