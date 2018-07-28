@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # https://github.com/Animosity/CraftIRC/wiki/Complete-idiot%27s-introduction-to-yaml
 
 version: 2
@@ -139,40 +138,3 @@ jobs:
       # run tests!
       - run: yarn test
       - run: echo $MY_ENV_VAR && echo $ANOTHER_VAR
-=======
-version: 2.0
-jobs:
- build:
-  docker:
-    - image: dolomitedex/buildcontainer:latest
-  steps:
-    - run: dmesg | grep -in mem
-
- test1:
-  docker:
-    - image: dolomitedex/buildcontainer:latest
-  steps:
-    - run: dmesg | grep -in mem
-
- deploy:
-  docker:
-    - image: dolomitedex/buildcontainer:latest
-  steps:
-    - run: dmesg | grep -in mem
-
-workflows:
-  version: 2
-  wat:
-    jobs:
-      - build
-      - test1:
-          requires:
-            - build
-      - hold:
-          type: approval
-          requires:
-           - test1
-      - deploy:
-          requires:
-            - hold
->>>>>>> df1168d4b7ccb583655c8830cfaaf2e8732a328c
