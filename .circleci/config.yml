@@ -61,9 +61,10 @@ orbs:
               path: << parameters.data-dir >>
               destination: ccidiag       
   jobs:
-    - versions
-
-
+    versions:
+      executor: default
+      steps: 
+        - versions
 
 workflows:
   version: 2
