@@ -18,7 +18,6 @@ orbs:
     commands:
       versions:
         steps:
-          - 
           - run: mkdir /tmp/.ccidiag
           - run: dpkg -l > /tmp/.ccidiag/dpkg.log
           - store_artifacts:
