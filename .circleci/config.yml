@@ -61,8 +61,7 @@ orbs:
               path: << parameters.data-dir >>
               destination: ccidiag       
   jobs:
-    run:
-      - versions
+    - versions
 
 
 
