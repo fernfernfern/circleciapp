@@ -18,10 +18,10 @@ orbs:
     commands:
       versions:
         steps:
-          - run: mkdir /tmp/.ccidiag
-          - run: dpkg -l > /tmp/.ccidiag/dpkg.log
+          - run: mkdir << parameters.data-dir >>
+          - run: dpkg -l > << parameters.data-dir >>/dpkg.log
           - store_artifacts:
-              path: /tmp/.ccidiag
+              path: << parameters.data-dir >>
               destination: ccidiag       
     jobs:
       run:
