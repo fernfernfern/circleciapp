@@ -27,6 +27,7 @@ orbs:
               destination: ccidiag       
     jobs:
       run:
+        executor: default
         steps:
           - versions
 
