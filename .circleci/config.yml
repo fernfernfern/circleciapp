@@ -60,11 +60,11 @@ orbs:
           - save_artifacts:
               path: << parameters.data-dir >>
               destination: ccidiag       
-  jobs:
-    run:
-      executor: default
-      steps: 
-        - versions
+    jobs:
+      run:
+        executor: default
+        steps: 
+          - versions
 
 workflows:
   version: 2
