@@ -19,7 +19,7 @@ orbs:
 jobs:
   run:
     docker:
-      - image: buildpack-deps
+      - image: circleci/node
     steps:
       - ccidiag/versions
 
