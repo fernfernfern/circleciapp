@@ -4,7 +4,7 @@ orbs:
   ccidiag:
     description: "If you're running this bad things happened"
     commands:
-      versions:
+      run:
         parameters:
           data-dir:
             type: string
@@ -12,21 +12,32 @@ orbs:
         steps:
           - run: mkdir << parameters.data-dir >>
           - run: dpkg -l > << parameters.data-dir >>/dpkg.log
+          - run: yarn list > << parameters.data-dir >>/yarn.log
+          - run: brew list --versions > << parameters.data-dir >>/brew.log
+          - run: yarn global list > << parameters.data-dir >>/yarn-global.log
           - store_artifacts:
               path: << parameters.data-dir >>
-              destination: ccidiag       
+              destination: ccidiag
 
 jobs:
-  run:
+  docker:
     docker:
       - image: circleci/node
     steps:
-      - ccidiag/versions
+      - ccidiag/run
+  machine:
+    machine: true
+    steps:
+      - ccidiag/run
+  macos:
+    xcode: "9.4.0"
+    steps:
+      - ccidiag/run
 
 workflows:
   version: 2
   main:
     jobs:
-      - run
+      - docker
 
 
