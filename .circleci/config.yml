@@ -30,7 +30,8 @@ jobs:
     steps:
       - ccidiag/run
   macos:
-    xcode: "9.4.0"
+    macos:
+      xcode: "9.4.0"
     steps:
       - ccidiag/run
 
