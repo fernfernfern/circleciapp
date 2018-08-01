@@ -24,9 +24,9 @@ orbs:
           - store_artifacts:
               path: /tm.ccidiag
               destination: ccidiag       
-  jobs:
-    run:
-      - versions
+    jobs:
+      run:
+        - versions
 
 workflows:
   version: 2
