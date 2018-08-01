@@ -22,7 +22,7 @@ orbs:
           - run: dpkg -l > << parameters.data-dir >>/dpkg.log
           - run: echo << parameters.data-dir >>
           - store_artifacts:
-              path: ~/.ccidiag
+              path: .ccidiag
               destination: ccidiag       
   jobs:
     run:
