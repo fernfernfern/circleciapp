@@ -68,7 +68,8 @@ orbs:
 
 workflows:
   version: 2
-  jobs:
-    - ccidiag/run
+  main:
+    jobs:
+      - ccidiag/run
 
 
