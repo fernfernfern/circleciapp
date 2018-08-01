@@ -22,7 +22,7 @@ orbs:
           - run: mkdir /tmp/.ccidiag
           - run: dpkg -l > /tmp/.ccidiag/dpkg.log
           - store_artifacts:
-              path: /tmp/.ccidiag
+              path: /tm.ccidiag
               destination: ccidiag       
   jobs:
     run:
@@ -30,5 +30,8 @@ orbs:
 
 workflows:
   version: 2
-  jobs:
-    - ccidiag/run
+  main:
+    jobs:
+      - ccidiag/run
+
+
