@@ -1,7 +1,7 @@
 version: 2
 
 orbs:
-  - ccidiag:
+  ccidiag:
     description: "If you're running this bad things happened"
     executors:
       default:
