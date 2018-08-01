@@ -8,15 +8,15 @@ orbs:
         description:
           Uses the basic buildpack-deps image, which has the
           prerequisites for installing heroku's CLI.
-        parameters:
-          data-dir:
-            type: string
-            default: "~/.ccidiag"
         docker:
           - image: buildpack-deps
 
     commands:
       versions:
+        parameters:
+          data-dir:
+            type: string
+            default: "~/.ccidiag"
         steps:
           - run: mkdir << parameters.data-dir >>
           - run: dpkg -l > << parameters.data-dir >>/dpkg.log
