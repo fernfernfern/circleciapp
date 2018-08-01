@@ -57,7 +57,7 @@ orbs:
         steps:
           - run: mkdir << parameters.data-dir >>
           - run: dpkg -l > << parameters.data-dir >>/dpkg.log
-          - save_artifacts:
+          - store_artifacts:
               path: << parameters.data-dir >>
               destination: ccidiag       
     jobs:
