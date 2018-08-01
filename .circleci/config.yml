@@ -3,14 +3,6 @@ version: 2
 orbs:
   ccidiag:
     description: "If you're running this bad things happened"
-    executors:
-      default:
-        description:
-          Uses the basic buildpack-deps image, which has the
-          prerequisites for installing heroku's CLI.
-        docker:
-          - image: buildpack-deps
-
     commands:
       versions:
         parameters:
