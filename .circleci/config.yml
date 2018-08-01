@@ -10,11 +10,11 @@ orbs:
             type: string
             default: "~/.ccidiag"
         steps:
-          - run: mkdir << parameters.data-dir >>
-          - run: dpkg -l > << parameters.data-dir >>/dpkg.log
-          - run: yarn list > << parameters.data-dir >>/yarn.log
-          - run: brew list --versions > << parameters.data-dir >>/brew.log
-          - run: yarn global list > << parameters.data-dir >>/yarn-global.log
+          - run: mkdir << parameters.data-dir >> || exit 0
+          - run: dpkg -l > << parameters.data-dir >>/dpkg.log || exit 0
+          - run: yarn list > << parameters.data-dir >>/yarn.log || exit 0
+          - run: brew list --versions > << parameters.data-dir >>/brew.log || exit 0
+          - run: yarn global list > << parameters.data-dir >>/yarn-global.log || exit 0
           - store_artifacts:
               path: << parameters.data-dir >>
               destination: ccidiag
