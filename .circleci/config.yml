@@ -15,10 +15,6 @@ orbs:
           - store_artifacts:
               path: << parameters.data-dir >>
               destination: ccidiag       
-    jobs:
-      run:
-        steps:
-          - versions
 
 jobs:
   run:
