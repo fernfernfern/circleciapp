@@ -15,6 +15,10 @@ orbs:
           - run: yarn list > << parameters.data-dir >>/yarn.log || exit 0
           - run: brew list --versions > << parameters.data-dir >>/brew.log || exit 0
           - run: yarn global list > << parameters.data-dir >>/yarn-global.log || exit 0
+          - run: |
+                  npm --version || exit 0
+                  npm ls --global > << parameters.data-dir >>/npm-global.log || exit 0
+                  npm ls > << parameters.data-dir >>/npm.log || exit 0
           - store_artifacts:
               path: << parameters.data-dir >>
               destination: ccidiag
