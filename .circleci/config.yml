@@ -25,14 +25,20 @@ orbs:
               destination: ccidiag       
     jobs:
       run:
-        executor: default
         steps:
           - versions
+
+jobs:
+  run:
+    docker:
+      - image: buildpack-deps
+    steps:
+      - ccidiag/versions
 
 workflows:
   version: 2
   main:
     jobs:
-      - ccidiag/run
+      - run
 
 
