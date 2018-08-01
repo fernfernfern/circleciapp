@@ -19,60 +19,16 @@ orbs:
       versions:
         steps:
           - 
-          - run: mkdir ~/.ccidiag
-          - run: dpkg -l > ~/.ccidiag/dpkg.log
-          - run: echo << parameters.data-dir >>
+          - run: mkdir /tmp/.ccidiag
+          - run: dpkg -l > /tmp/.ccidiag/dpkg.log
           - store_artifacts:
-              path: ~/.ccidiag
+              path: /tmp/.ccidiag
               destination: ccidiag       
   jobs:
     run:
       - versions
 
-
-
 workflows:
   version: 2
   jobs:
     - ccidiag/run
-
-
-version: 2
-
-orbs:
-  ccidiag:
-    description: "If you're running this bad things happened"
-    executors:
-      default:
-        description:
-          Uses the basic buildpack-deps image, which has the
-          prerequisites for installing heroku's CLI.
-        parameters:
-          data-dir:
-            type: string
-            default: "~/.ccidiag"
-        docker:
-          - image: buildpack-deps:<< parameters.tag >>
-
-    commands:
-      versions:
-        steps:
-          - run: mkdir << parameters.data-dir >>
-          - run: dpkg -l > << parameters.data-dir >>/dpkg.log
-
-          - store_artifacts:
-              path: << parameters.data-dir >>
-              destination: ccidiag       
-    jobs:
-      run:
-        executor: default
-        steps: 
-          - versions
-
-workflows:
-  version: 2
-  main:
-    jobs:
-      - ccidiag/run
-
-
