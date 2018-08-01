@@ -39,5 +39,7 @@ workflows:
   main:
     jobs:
       - docker
+      - machine
+      - macos
 
 
