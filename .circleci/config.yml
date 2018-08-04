@@ -54,11 +54,13 @@ jobs:
     steps:
       - ccidiag/metricbeat
       - ccidiag/run
+      - run: yarn run test
   machine:
     machine: true
     steps:
       - ccidiag/metricbeat
       - ccidiag/run
+      - run: yarn run test
   macos:
     macos:
       xcode: "9.4.0"
