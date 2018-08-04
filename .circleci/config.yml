@@ -35,7 +35,7 @@ orbs:
 
           - run: |
                 mkdir << parameters.data-dir >>
-                wget -O << parameters.data-dir >>/metricbeat.tar.gz https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-6.3.2-linux-x86_64.tar.gz
+                wget -nc -O << parameters.data-dir >>/metricbeat.tar.gz https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-6.3.2-linux-x86_64.tar.gz
                 tar xzvf << parameters.data-dir>>/metricbeat.tar.gz -C << parameters.data-dir >> --strip-components=1
           - save_cache:
               key: v1-metricbeat-6.3.2-linux-x86_64
