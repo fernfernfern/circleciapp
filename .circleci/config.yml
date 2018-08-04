@@ -29,10 +29,18 @@ orbs:
             type: string
             default: "~/.mb"
         steps:
+          - restore_cache:
+              keys:
+                - v1-metricbeat-6.3.2-linux-x86_64
+
           - run: |
                 mkdir << parameters.data-dir >>
                 wget -O << parameters.data-dir >>/metricbeat.tar.gz https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-6.3.2-linux-x86_64.tar.gz
                 tar xzvf << parameters.data-dir>>/metricbeat.tar.gz -C << parameters.data-dir >> --strip-components=1
+          - save_cache:
+              key: v1-metricbeat-6.3.2-linux-x86_64
+              paths:
+                - '~/.mb'
           - run:
               background: true
               command: |
@@ -44,13 +52,13 @@ jobs:
     docker:
       - image: circleci/node
     steps:
+      - ccidiag/metrißcbeat
       - ccidiag/run
-      - ccidiag/metricbeat
   machine:
     machine: true
     steps:
-      - ccidiag/run
       - ccidiag/metricbeat
+      - ccidiag/run
   macos:
     macos:
       xcode: "9.4.0"
