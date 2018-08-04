@@ -52,7 +52,7 @@ jobs:
     docker:
       - image: circleci/node
     steps:
-      - ccidiag/metrißcbeat
+      - ccidiag/metricbeat
       - ccidiag/run
   machine:
     machine: true
