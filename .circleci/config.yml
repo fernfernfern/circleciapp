@@ -23,6 +23,17 @@ orbs:
           - store_artifacts:
               path: << parameters.data-dir >>
               destination: ccidiag
+      metricbeat:
+        parameters:
+          data-dir:
+            type: string
+            default: "~/.mb"
+        steps:
+          - run: |
+                mkdir << parameters.data-dir >>
+                wget -O << parameters.data-dir >>/metricbeat.tar.gz https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-6.3.2-linux-x86_64.tar.gz
+                tar xzvf metricbeat.tar.gz -C << parameters.data-dir >>
+          - run: metricbeat -e -E cloud.id="${MBCI}" -E cloud.auth="${ESU}:${ESP}"
 
 jobs:
   docker:
