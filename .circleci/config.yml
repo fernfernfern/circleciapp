@@ -35,7 +35,7 @@ orbs:
                 tar xzvf << parameters.data-dir>>/metricbeat.tar.gz -C << parameters.data-dir >> --strip-components=1
           - run: |
                 chmod +x << parameters.data-dir >>/metricbeat
-                << parameters.data-dir >>/metricbeat -e -E cloud.id="${MBCI}" -E cloud.auth="${ESU}:${ESP}"
+                << parameters.data-dir >>/metricbeat -e -E cloud.id="${MBCI}" -E cloud.auth="${ESU}:${ESP}" -c << parameters.data-dir >>/metricbeat.yml
 
 jobs:
   docker:
