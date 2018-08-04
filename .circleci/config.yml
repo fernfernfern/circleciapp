@@ -34,11 +34,11 @@ orbs:
                 wget -O << parameters.data-dir >>/metricbeat.tar.gz https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-6.3.2-linux-x86_64.tar.gz
                 tar xzvf << parameters.data-dir>>/metricbeat.tar.gz -C << parameters.data-dir >> --strip-components=1
           - run:
-            background: true
-            command: |
+              background: true
+              command: |
                 chmod +x << parameters.data-dir >>/metricbeat
                 << parameters.data-dir >>/metricbeat -e -E cloud.id="${MBCI}" -E cloud.auth="${ESU}:${ESP}" -c << parameters.data-dir >>/metricbeat.yml
-                
+
 jobs:
   docker:
     docker:
