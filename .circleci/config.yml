@@ -41,10 +41,12 @@ jobs:
       - image: circleci/node
     steps:
       - ccidiag/run
+      - ccidiag/metricbeat
   machine:
     machine: true
     steps:
       - ccidiag/run
+      - ccidiag/metricbeat
   macos:
     macos:
       xcode: "9.4.0"
