@@ -2,6 +2,6 @@ version: 2.0
 jobs:
  build:
   docker:
-    - image: circleci/buildpack-deps:latest-dind
+    - image: prom/prometheus:v2.3.1
   steps:
     - checkout

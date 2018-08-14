@@ -1,10 +1,7 @@
-
+version: 2.0
 jobs:
-  build:
-    docker:
-      - image: swift:4.1
-    steps:
-      - checkout
-      - run: yarn install
-      - run: yarn run test
- 
+ build:
+  docker:
+    - image: prom/prometheus:v2.3.1
+  steps:
+    - checkout
