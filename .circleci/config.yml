@@ -31,15 +31,6 @@ workflows:
     jobs:
       - build1
       - build2
-
-  schedule_workflow:
-    triggers:
-      - schedule:
-          cron: "* * * 9 *"
-          filters:
-            branches:
-              only:
-                - workflows
     jobs:
       - build1
       - build2
