@@ -1,7 +1,13 @@
-version: 2.0
+version: 2.1
+
+orbs:
+  diag: fernfernfern/diag@dev:dev
+
 jobs:
- build:
-  docker:
-    - image: prom/prometheus:v2.3.1
-  steps:
-    - checkout
+  build1:
+    docker:
+      - image: circleci/python
+    steps:
+      - checkout
+      - diag/runnit`
+
