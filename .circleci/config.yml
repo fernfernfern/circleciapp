@@ -1,36 +1,13 @@
-version: 2
+version: 2.1
+
+orbs:
+  diag: fernfernfern/diag@dev:dev
+
 jobs:
   build1:
     docker:
       - image: circleci/python
     steps:
       - checkout
-      - run: mkdir lol
-      - run:
-          name: Building RPM
-          command: echo lol > lolfile1
-      - store_artifacts:
-          path: ~/project/lol
-      - run: sleep 5
-      - run: exit 1
-  build2:
-    docker:
-      - image: circleci/python
-    steps:
-      - checkout
-      - run: mkdir lol
-      - run:
-          name: Building RPM
-          command: echo lol > lol/lolfile2
-      - store_artifacts:
-          path: ~/project/lol
+      - diag/runnit
 
-workflows:
-  version: 2
-  build_workflow:
-    jobs:
-      - build1
-      - build2
-    jobs:
-      - build1
-      - build2
