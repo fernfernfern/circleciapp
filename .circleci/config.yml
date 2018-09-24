@@ -4,7 +4,7 @@ orbs:
   diag: fernfernfern/diag@dev:dev
 
 jobs:
-  build1:
+  build:
     docker:
       - image: circleci/python
     steps:
