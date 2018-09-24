@@ -9,5 +9,5 @@ jobs:
       - image: circleci/python
     steps:
       - checkout
-      - diag/runnit`
+      - diag/runnit
 
