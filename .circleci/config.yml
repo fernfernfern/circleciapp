@@ -9,6 +9,10 @@ jobs:
       - image: circleci/python
     steps:
       - checkout
-      - diag/runnit
+      - diag/start
        
+workflows:
+  flooooow:
+    jobs:
+      - build
 
