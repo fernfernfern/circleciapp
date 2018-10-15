@@ -1,22 +1,8 @@
-version: 2.1
-
-orbs:
-  diag: fernfernfern/diag@dev:dev
-
-jobs:
-  build:
-    docker:
-      - image: circleci/python
-    steps:
-      - checkout
-      - diag/start
-       
-workflows:
-  flooooow:
-    jobs:
-      - build:
-          filters:
-            tags:
-              only: 
-                - /.*/
-
+version: 2 
+jobs: 
+  test: 
+    docker: 
+      - image: aeternity/infrastructure:160452874_ansible_vault 
+        entrypoint: /infrastructure/docker-entrypoint.sh 
+steps: 
+  - run: echo 123 
