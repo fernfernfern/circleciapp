@@ -3,6 +3,5 @@ jobs:
   test: 
     docker: 
       - image: aeternity/infrastructure:160452874_ansible_vault 
-        entrypoint: /infrastructure/docker-entrypoint.sh 
   steps: 
     - run: echo 123 
