@@ -1,6 +1,6 @@
 version: 2 
 jobs: 
-  test: 
+  build: 
     docker: 
       - image: aeternity/infrastructure:160452874_ansible_vault 
   steps: 
