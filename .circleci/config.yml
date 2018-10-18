@@ -3,5 +3,16 @@ jobs:
   build: 
     docker: 
       - image: aeternity/infrastructure:160452874_ansible_vault 
-  steps: 
-    - run: echo 123 
+        entrypoint: /infrastructure/docker-entrypoint.sh 
+    steps: 
+      - run: echo 123 
+
+
+workflows:
+  version: 2
+  workflow1:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
