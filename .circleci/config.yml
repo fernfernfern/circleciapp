@@ -67,7 +67,7 @@ jobs:
 
   build2:
     docker:
-        image: python
+        - image: python
     steps:
         - run: echo lol
 
