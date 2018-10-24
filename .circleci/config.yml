@@ -65,12 +65,6 @@ jobs:
     - run:
         command: service metricbeat
 
-  hold:
-    docker:
-        - image: python
-    steps:
-        - run: echo lol
-
 workflows:
   version: 2
   workflow:
@@ -78,4 +72,5 @@ workflows:
     - hold:
         type: approval
     - build:
-        requires: hold
+        requires: 
+            - hold
