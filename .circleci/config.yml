@@ -64,6 +64,13 @@ jobs:
         command: sleep 5
     - run:
         command: service metricbeat
+
+  hold:
+    docker:
+        - image: python
+    steps:
+        - run: echo lol
+
 workflows:
   version: 2
   workflow:
