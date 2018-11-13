@@ -78,4 +78,4 @@ workflows:
         - build2:
             filters:
               tags:
-                - /.*/
+                only: /.*/
