@@ -75,11 +75,7 @@ workflows:
   version: 2
   workflow:
     jobs:
-        - build2
-        - hold:
-            type: approval
-            requires:
-                - build2
-        - build:
-            requires: 
-                - hold
+        - build2:
+            filters:
+              tags:
+                - /.*/
