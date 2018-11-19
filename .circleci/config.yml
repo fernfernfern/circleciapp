@@ -4,78 +4,12 @@ jobs:
     docker:
     - image: circleci/python
     steps:
+    - setup_remote_docker
     - run:
-        command: pwd
-    - run:
-        command: |
-          mkdir ~/.ccidiag || true
-          cat /proc/cpuinfo > ~/.ccidiag/proc_cpuinfo.log || true
-          dpkg -l > ~/.ccidiag/dpkg.log || true
-          yarn list > ~/.ccidiag/yarn.log || true
-          brew list --versions > ~/.ccidiag/brew.log || true
-          yarn global list > ~/.ccidiag/yarn-global.log || true
-          gem query --local > ~/.ccidiag/gem.log || true
-          npm --version || true
-          npm ls --global > ~/.ccidiag/npm-global.log || true
-          npm ls > ~/.ccidiag/npm.log || true
-        name: CircleCI Diag Report
-    - store_artifacts:
-        destination: ccidiag/env-info
-        path: ~/.ccidiag
-    - run:
-        command: "mkdir -p ~/sample-test-results/jest\ncat << EOF > ~/sample-test-results/jest/junit.xml\n\
-          <testsuites name=\"jest tests\">\n  <testsuite name=\"undefined\" errors=\"\
-          0\" failures=\"0\" skipped=\"0\" timestamp=\"2018-05-16T22:26:25\" time=\"\
-          4.21\" tests=\"1\">\n    <testcase classname=\" renders without crashing\"\
-          \ name=\" renders without crashing\" time=\"2.879\">\n    </testcase>\n\
-          \  </testsuite>\n</testsuites>\nEOF\n\nmkdir -p ~/sample-test-results/python\n\
-          cat << EOF > ~/sample-test-results/python/junit.xml\n<?xml version=\"1.0\"\
-          \ encoding=\"UTF-8\"?>\n<testsuite errors=\"0\" failures=\"0\" name=\"test_api.APITestCase-20180507233023\"\
-          \ skipped=\"0\" tests=\"9\" time=\"2.250\">\n  <testcase classname=\"test_api.APITestCase\"\
-          \ name=\"test_404\" time=\"0.153\"/>\n  <testcase classname=\"test_api.APITestCase\"\
-          \ name=\"test_anonymous\" time=\"0.070\"/>\n  <testcase classname=\"test_api.APITestCase\"\
-          \ name=\"test_bad_auth\" time=\"0.192\"/>\n  <testcase classname=\"test_api.APITestCase\"\
-          \ name=\"test_comments\" time=\"0.523\"/>\n  <testcase classname=\"test_api.APITestCase\"\
-          \ name=\"test_no_auth\" time=\"0.072\"/>\n  <testcase classname=\"test_api.APITestCase\"\
-          \ name=\"test_posts\" time=\"0.559\"/>\n  <testcase classname=\"test_api.APITestCase\"\
-          \ name=\"test_token_auth\" time=\"0.193\"/>\n  <testcase classname=\"test_api.APITestCase\"\
-          \ name=\"test_unconfirmed_account\" time=\"0.190\"/>\n  <testcase classname=\"\
-          test_api.APITestCase\" name=\"test_users\" time=\"0.297\"/>\n  <system-out>\n\
-          <![CDATA[]]>\t</system-out>\n  <system-err>\n<![CDATA[]]>\t</system-err>\n\
-          </testsuite>\nEOF\n"
-        name: Generating Test Data
-    - store_artifacts:
-        destination: ccidiag/sample-data
-        path: ~/sample-test-results
-    - store_test_results:
-        path: ~/sample-test-results
-    - run:
-        command: |
-          mkdir -p ~/.mb
-          wget -c -nc -O ~/.mb/metricbeat.tar.gz https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-6.3.2-linux-x86_64.tar.gz || true
-          tar xzvf ~/.mb/metricbeat.tar.gz -C ~/.mb --strip-components=1
-    - run:
-        background: true
-        command: |
-          chmod +x ~/.mb/metricbeat
-          echo ~/.mb/metricbeat.yml
-          ~/.mb/metricbeat -c ~/.mb/metricbeat.yml
-    - run:
-        command: sleep 5
-    - run:
-        command: service metricbeat
-
-  build2:
-    docker:
-        - image: python
-    steps:
-        - run: echo lol
+        command: docker version
 
 workflows:
   version: 2
   workflow:
     jobs:
-        - build2:
-            filters:
-              tags:
-                only: /.*/
+        - build
