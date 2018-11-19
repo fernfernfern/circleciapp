@@ -2,12 +2,13 @@ version: 2
 jobs:
   build:
     macos:
-      xcode: "9.0"
+      xcode: "10.1"
     environment:
       FASTLANE_LANE: test
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
       - run:
-          name: Fastlane
-          command: bundle exec fastlane $FASTLANE_LANE
+          name: Simulators
+          command: xcrun simctl list
+
