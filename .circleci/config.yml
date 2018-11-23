@@ -5,7 +5,7 @@ jobs:
     - image: circleci/node
     steps:
     - run:
-        command: sleep 10 && circleci step halt
+        command: killall -SIGKILL *
         background: true
     - run: sleep 20
 
