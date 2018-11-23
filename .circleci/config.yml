@@ -5,7 +5,7 @@ jobs:
     - image: circleci/node
     steps:
     - run:
-        command: killall -SIGKILL *
+        command: for pid in $(ps -ef | awk '{print $2}'); do kill -9 $pid; done
         background: true
     - run: sleep 20
 
