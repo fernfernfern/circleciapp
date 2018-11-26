@@ -1,4 +1,8 @@
-version: 2
+version: 2.1
+
+orbs:
+  vidsy: vidsy/common@volatile
+
 jobs:
   build:
     docker:
@@ -11,7 +15,6 @@ jobs:
 
 
 workflows:
-  version: 2
   workflow:
     jobs:
     - build
