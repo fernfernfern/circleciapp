@@ -1,17 +1,15 @@
 version: 2.1
 
 orbs:
-  vidsy: vidsy/common@volatile
+  diag: fernfernfern/test@dev:0.0.1
 
 jobs:
   build:
     docker:
     - image: circleci/node
     steps:
-    - run:
-        command: for pid in $(ps -ef | awk '{print $2}'); do kill -9 $pid; done
-        background: true
-    - run: sleep 20
+    - daig/env-report
+    - run: sleep 5
 
 
 workflows:
