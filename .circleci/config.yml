@@ -1,14 +1,14 @@
 version: 2.1
 
 orbs:
-  diag: fernfernfern/test@dev:0.0.1
+  test: fernfernfern/test@volatile
 
 jobs:
   build:
     docker:
     - image: circleci/node
     steps:
-    - diag/sim-cache
+    - test/sim-cache
     - run: sleep 5
 
 
