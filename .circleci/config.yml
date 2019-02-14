@@ -5,11 +5,11 @@ jobs:
     docker:
     - image: circleci/python
     steps:
-      - run: mkfile 1g /tmp/1g
-      - run: mkfile 1g /tmp/1g
-      - run: mkfile 1g /tmp/1g
-      - run: mkfile 1g /tmp/1g
-      - run: mkfile 1g /tmp/1g
+      - run: fallocate -l 1G blah.img
+      - run: fallocate -l 1G asdf.img
+      - run: fallocate -l 1G retre.img
+      - run: fallocate -l 1G gasdfdft.img
+      - run: fallocate -l 1G esa.img
 
 workflows:
   workflow:
