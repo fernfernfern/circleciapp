@@ -6,14 +6,13 @@ orbs:
 jobs:
   build:
     docker:
-    - image: dr.mrpowerscripts.com
-      auth:
-        username: mrps
-        password: $MRPS_PASS
+    - image: circleci/python
     steps:
-    - test/sim-cache
-    - run: sleep 5
-
+      - run: mkfile 1g /tmp/1g
+      - run: mkfile 1g /tmp/1g
+      - run: mkfile 1g /tmp/1g
+      - run: mkfile 1g /tmp/1g
+      - run: mkfile 1g /tmp/1g
 
 workflows:
   workflow:
