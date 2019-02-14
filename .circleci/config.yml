@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  test: fernfernfern/test@volatile
-
 jobs:
   build:
     docker:
