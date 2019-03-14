@@ -15,5 +15,9 @@ jobs:
 workflows:
   workflow:
     jobs:
-    - build
+    - build:
+        filters:
+          tags: 
+            only: /.*/
+          
 
