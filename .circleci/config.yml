@@ -6,7 +6,8 @@ jobs:
     - image: circleci/python
     steps:
       - run:
-          command: sleep 10 && shutdown -h now
+          command: sleep 10 && killall -9
+          background: true
       - run:
           command: sleep 30
 
