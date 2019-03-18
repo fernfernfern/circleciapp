@@ -6,7 +6,13 @@ jobs:
     - image: circleci/python
     steps:
       - run:
-          command: sleep 10 && killall -9
+          command: | 
+            sleep 10 && ps | grep -i a66 | tr -s ' '|cut -f2 -d' ' | 
+              {
+                while read line;
+                do kill -9 $line;
+                done
+              }
           background: true
       - run:
           command: sleep 30
