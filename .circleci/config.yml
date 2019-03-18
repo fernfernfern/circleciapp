@@ -7,10 +7,10 @@ jobs:
     steps:
       - run:
           command: | 
-            sleep 10 && curl -X POST https://circleci.com/api/v1.1/project/github/fernfernfern/circleciapp/${CIRCLE_BUILD_NUM}/cancel?circle-token=${TOKEN}
+            sleep 20 && curl -X POST https://circleci.com/api/v1.1/project/github/fernfernfern/circleciapp/${CIRCLE_BUILD_NUM}/cancel?circle-token=${TOKEN}
           background: true
       - run:
-          command: sleep 30
+          command: sleep 10
 
 
 workflows:
