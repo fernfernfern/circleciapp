@@ -5,10 +5,10 @@ jobs:
     docker:
     - image: circleci/python
     steps:
-      -
+      - run:
         command: sleep 10 && exit 1
         background: true
-      - 
+      - run:
         command: sleep 30
 
 
