@@ -6,12 +6,9 @@ orbs:
 jobs:
   build:
     docker:
-    - image: circleci/python
+    - image: circleci/node:10.15
     steps:
-      - stopthatjob/in:
-          minutes: 1
-      - run:
-          command: sleep 300
+      - run: echo weee
 
 workflows:
   workflow:
