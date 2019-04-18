@@ -13,12 +13,12 @@ jobs:
 workflows:
   workflow:
     jobs:
-    - build:
-        triggers:
-        - schedule:
-            cron: \"*/5 * * * *\"
-            filters:
-                branches:
-                    only:
-                        - master
+    - build
+    triggers:
+    - schedule:
+        cron: \"*/5 * * * *\"
+        filters:
+            branches:
+                only:
+                    - master
 
