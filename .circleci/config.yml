@@ -9,16 +9,10 @@ jobs:
     - image: circleci/node:10.15
     steps:
       - run: echo weee
+      - setup_remote_docker
 
 workflows:
   workflow:
     jobs:
     - build
-    triggers:
-    - schedule:
-        cron: "*/5 * * * *"
-        filters:
-            branches:
-                only:
-                    - master
 
