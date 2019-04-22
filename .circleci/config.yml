@@ -1,4 +1,4 @@
-version: 2.1
+version: 2.1 #KyleTryon is now a contributor
 
 orbs:
   stopthatjob: fernfernfern/stopthatjob@1.0.0
