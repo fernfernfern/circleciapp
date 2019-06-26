@@ -1,8 +1,5 @@
 version: 2.1 #KyleTryon is now a contributor
-
-orbs:
-  stopthatjob: fernfernfern/stopthatjob@1.0.0
-
+version: 2.1
 jobs:
   build:
     docker:
@@ -10,9 +7,4 @@ jobs:
     steps:
       - run: echo weee
       - setup_remote_docker
-
-workflows:
-  workflow:
-    jobs:
-    - build
 
