@@ -10,6 +10,9 @@ jobs:
   flow:
     executor: my-executor
     steps:
+      - run: |
+          sudo sh -c 'echo '\''DOCKER_OPTS="--experimental=true"'\'' >> /etc/default/docker'
+          sudo service docker restart
       - run: docker version
 
 workflows:
