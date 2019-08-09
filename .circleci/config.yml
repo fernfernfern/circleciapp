@@ -11,7 +11,7 @@ jobs:
     executor: my-executor
     steps:
       - run: |
-          echo DOCKER_OPTS="--experimental=true" >> $BASH_ENV
+          echo $'{\n    "experimental": true\n}' | sudo tee /etc/docker/daemon.json;
           sudo service docker restart
       - run: docker version
 
