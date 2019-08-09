@@ -11,7 +11,7 @@ jobs:
     executor: my-executor
     steps:
       - run: |
-          sudo sh -c 'echo '\''DOCKER_OPTS="--experimental=true"'\'' >> $BASH_ENV'
+          echo DOCKER_OPTS="--experimental=true" >> $BASH_ENV
           sudo service docker restart
       - run: docker version
 
