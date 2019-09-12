@@ -1,13 +1,9 @@
-version: 2.1
-
-executors:
-  my-executor:
-    docker: 
-      - image: circleci/python
+version: 2
 
 jobs:
-  flow:
-    executor: my-executor
+  build:
+    docker: 
+      - image: circleci/python
     steps:
     - run: mkdir "TruDoc 24x7" && echo test > ./TruDoc\ 24x7/Podfile.lock
     - restore_cache:
@@ -17,8 +13,3 @@ jobs:
         key: v1-pods-deps-{{ checksum "./TruDoc 24x7/Podfile.lock" }}
         paths:
         - /TruDoc\ 24x7
-
-workflows:
-  btd:
-    jobs:
-      - flow
