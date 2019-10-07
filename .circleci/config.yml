@@ -5,14 +5,8 @@ jobs:
     docker: 
       - image: circleci/python
     steps:
-    - run: mkdir "TruDoc 24x7" && echo test > ./TruDoc\ 24x7/Podfile.lock
-    - restore_cache:
-        keys:
-        - v1-pods-deps-{{ checksum "./TruDoc 24x7/Podfile.lock" }}
-    - save_cache:
-        key: v1-pods-deps-{{ checksum "./TruDoc 24x7/Podfile.lock" }}
-        paths:
-        - /TruDoc\ 24x7
+    - run: sleep 5
+    - run: sudo kill 1
 
 
 
