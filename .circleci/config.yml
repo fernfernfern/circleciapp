@@ -6,7 +6,7 @@ jobs:
       - image: circleci/python
     steps:
     - run: sleep 5
-    - run: kill 1
+    - run: pkill -ABRT -f circleci-agent
 
 
 
