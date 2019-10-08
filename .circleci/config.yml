@@ -1,12 +1,11 @@
-version: 2
+version: 2.1
+
+orbs:
+  win: circleci/windows@1.0.0
 
 jobs:
   build:
-    docker: 
-      - image: circleci/python
+    executor: win/vs2019
     steps:
-    - run: sleep 300
-    - run: pkill -ABRT -f circleci-agent
-
-
-
+      - checkout
+      - run: Write-Host 'Hello, Windows'
