@@ -5,7 +5,7 @@ jobs:
     docker: 
       - image: circleci/python
     steps:
-    - run: sleep 5
+    - run: sleep 300
     - run: pkill -ABRT -f circleci-agent
 
 
