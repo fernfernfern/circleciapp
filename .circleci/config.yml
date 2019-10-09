@@ -1,11 +1,14 @@
 version: 2.1
 
-orbs:
-  win: circleci/windows@1.0.0
-
 jobs:
   build:
-    executor: win/vs2019
+    machine:
+      image: windows-server-2019-vs2019:201908-06
+    shell: powershell.exe
     steps:
       - checkout
-      - run: Write-Host 'Hello, Windows'
+      - run:
+          environment:
+            TARGET: nightly-unsecure-as-only
+          name: Start Component Build
+          command: . ./test.ps1
