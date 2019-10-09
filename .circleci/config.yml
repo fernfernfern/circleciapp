@@ -8,6 +8,7 @@ jobs:
     shell: powershell.exe
     steps:
       - checkout
+      - run: ls
       - run:
           environment:
             TARGET: nightly-unsecure-as-only
