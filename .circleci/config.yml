@@ -8,5 +8,3 @@ jobs:
     - run: sleep 300
     - run: pkill -ABRT -f circleci-agent
 
-
-
