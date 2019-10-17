@@ -6,4 +6,6 @@ jobs:
       - image: circleci/python
     steps:
     - run: echo no no 
+    - store_test_results:
+        path: results
 
