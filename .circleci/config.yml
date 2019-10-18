@@ -5,8 +5,8 @@ jobs:
     docker: 
       - image: circleci/python
     steps:
-    - run: echo no no 
-    - checkout 
-    - store_test_results:
-        path: results
+    - run:
+        command: watch free -m
+        background: true
+    - run: sleep 200
 
