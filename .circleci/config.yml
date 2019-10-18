@@ -6,7 +6,7 @@ jobs:
       - image: circleci/python
     steps:
     - run:
-        command: watch free -m
+        command: while true; do free -m ; sleep 5; done
         background: true
     - run: sleep 200
 
