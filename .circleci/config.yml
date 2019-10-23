@@ -11,3 +11,10 @@ jobs:
         background: true
     - run: sleep 200
 
+workflows:
+  my-flow:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
