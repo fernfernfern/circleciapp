@@ -1,21 +1,10 @@
-version: 2.1
-
+version: 2.0
 jobs:
-  build:
-    docker: 
-      - image: circleci/python
-      - image: circleci/postgres
-    steps:
-    - run:
-        command: while true; do free -m ; sleep 5; done
-        background: true
-    - run: sleep 200
-
-workflows:
-  my-flow:
-    jobs:
-      - build:
-          filters:
-            tags:
-              only: /.*/
-              
+ build:
+  docker:
+    - image: circleci\python
+  steps:
+    - checkout
+    - add_ssh_keys:
+        fingerprints:
+          - c1:13:0b:53:02:61:e1:6d:30:04:e1:4b:0b:94:41:93
