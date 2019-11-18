@@ -1,10 +1,10 @@
 version: 2.0
 jobs:
- build:
-  docker:
-    - image: circleci\python
-  steps:
-    - checkout
-    - add_ssh_keys:
-        fingerprints:
-          - c1:13:0b:53:02:61:e1:6d:30:04:e1:4b:0b:94:41:93
+  build:
+    docker:
+      - image: circleci\python
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - c1:13:0b:53:02:61:e1:6d:30:04:e1:4b:0b:94:41:93
