@@ -8,3 +8,6 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "c1:13:0b:53:02:61:e1:6d:30:04:e1:4b:0b:94:41:93"
+            - "6d:9b:e6:98:ae:55:36:4c:ce:d9:e2:49:6b:d0:ae:3b"
+            - "ad:0c:fb:0a:ce:30:dc:f3:d1:49:9f:ca:49:0f:74:e8"
+
