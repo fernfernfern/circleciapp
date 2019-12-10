@@ -9,3 +9,13 @@ jobs:
           fingerprints:
             - "00:8c:fd:eb:92:66:b9:f5:47:07:e3:55:58:02:16:f6"
 
+workflows:
+  scheduled:
+    triggers:
+      - schedule:
+          cron: "0,10,20,30,40,50 * * * *"
+          filters:
+            branches:
+              only:
+                - master
+
