@@ -11,6 +11,8 @@ jobs:
 
 workflows:
   scheduled:
+    jobs:
+      - build
     triggers:
       - schedule:
           cron: "0,10,20,30,40,50 * * * *"
