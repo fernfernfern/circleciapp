@@ -1,13 +1,12 @@
 version: 2.1
 jobs:
   build:
-    docker:
-      - image: circleci/python
+    machine:
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "00:8c:fd:eb:92:66:b9:f5:47:07:e3:55:58:02:16:f6"
 
-
-
+workflows:
+  what:
+    jobs:
+      - build
