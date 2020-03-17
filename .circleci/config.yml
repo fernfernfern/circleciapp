@@ -1,10 +1,13 @@
 version: 2.1
+
 jobs:
   build:
-    machine:
-      image: ubuntu-1604:201903-01
+    parallelism: 5
+    docker:
+      - image: circleci/node
     steps:
       - checkout
+      - run: echo $CIRCLE_NODE_INDEX
 
 workflows:
   what:
