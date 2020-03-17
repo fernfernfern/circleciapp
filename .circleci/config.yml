@@ -8,6 +8,7 @@ jobs:
     steps:
       - checkout
       - run: echo $CIRCLE_NODE_INDEX
+      - run: circleci tests glob src/tests/*.test.js | circleci tests split
 
 workflows:
   what:
