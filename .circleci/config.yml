@@ -10,7 +10,7 @@ commands:
       - save_cache:
           paths:
             - node_modules
-          key: "{{ checksum "package-lock.json" }}"
+          key: "{{ checksum 'package-lock.json' }}"
 
 jobs:
   build:
@@ -30,7 +30,7 @@ jobs:
       - checkout
       - deps
       - run: npm run test
-      
+
 workflows:
   what:
     jobs:
