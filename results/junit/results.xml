@@ -1,5 +1,0 @@
-<testsuites name="all"> 
-<testsuite name="Edit common attributes of many products at once" tests="1" skipped="0" failures="1" errors="0"> 
-<testcase name="tests/legacy/features/pim/enrichment/product/mass-edit/edit-common-attribute/edit_common_attributes.feature:271" status="failed" time="10.823"> </testcase>
-</testsuite> 
-</testsuites>
