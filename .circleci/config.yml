@@ -1,5 +1,17 @@
 version: 2.1
 
+commands:
+  deps:
+    steps:
+      - restore_cache:
+          keys: 
+            - '{ checksum package-lock.json }'
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: '{ checksum package-lock.json }'
+
 jobs:
   build:
     parallelism: 5
@@ -7,6 +19,7 @@ jobs:
       - image: circleci/node
     steps:
       - checkout
+      - deps
       - run: echo $CIRCLE_NODE_INDEX
       - run: circleci tests glob src/tests/*.test.js | circleci tests split
       - run: npm run test (circleci tests glob src/tests/*.test.js | circleci tests split)
