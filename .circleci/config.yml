@@ -5,12 +5,12 @@ commands:
     steps:
       - restore_cache:
           keys: 
-            - '{ checksum package-lock.json }'
+            - "{{ checksum package-lock.json }}"
       - run: npm install
       - save_cache:
           paths:
             - node_modules
-          key: '{ checksum package-lock.json }'
+          key: "{{ checksum package-lock.json }}"
 
 jobs:
   build:
@@ -22,12 +22,13 @@ jobs:
       - deps
       - run: echo $CIRCLE_NODE_INDEX
       - run: circleci tests glob src/tests/*.test.js | circleci tests split
-      - run: npm run test (circleci tests glob src/tests/*.test.js | circleci tests split)
+      - run: npm run test $(circleci tests glob src/tests/*.test.js | circleci tests split)
   build2:
     docker:
       - image: circleci/node
     steps:
       - checkout
+      - deps
       - run: npm run test
 workflows:
   what:
