@@ -5,12 +5,12 @@ commands:
     steps:
       - restore_cache:
           keys: 
-            - "{{ checksum 'package-lock.json' }}"
+            - "{{ checksum package.json }}"
       - run: npm install
       - save_cache:
           paths:
             - node_modules
-          key: "{{ checksum 'package-lock.json' }}"
+          key: "{{ checksum package.json }}"
 
 jobs:
   build:
