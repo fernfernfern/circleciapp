@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import App from '../App'
-import sleep from '../tools'
+import { sleep, defaultDuration } from '../tools'
 
 it('changes the text on click', () => {
   const wrapper = shallow(<App/>)
