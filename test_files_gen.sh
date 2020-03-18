@@ -29,7 +29,7 @@ for i in {0..500}
 do
   echo "$HEAD" > "./src/tests/App$(printf "%03d" "$i").test.js"
 
-  for l in {0..200}
+  for l in {0..180}
   do
     echo "$TEST" >> "./src/tests/App$(printf "%03d" "$i").test.js"
   done
