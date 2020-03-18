@@ -5,12 +5,12 @@ commands:
     steps:
       - restore_cache:
           keys: 
-            - "cache"
+            -  -v1-{{ checksum "package-lock.json" }}-node
       - run: npm install
       - save_cache:
           paths:
             - node_modules
-          key: "cache"
+          key: -v1-{{ checksum "package-lock.json" }}-node
       - run: ./test_files_gen.sh
   parallel:
     steps:
