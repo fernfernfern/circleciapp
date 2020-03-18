@@ -11,7 +11,6 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 500000;
 it('changes the text on click', () => {
   const wrapper = shallow(<App/>)
   let text = wrapper.find('.text-container')
-  expect(sleep(defaultDuration)).resolves.toBeUndefined()
   expect(text.exists()).toBe(true)
   expect(wrapper.state('words')).toBe('')
   wrapper.find('button').simulate('click')
