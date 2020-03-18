@@ -54,3 +54,4 @@ workflows:
       - build
       - parallel-5
       - parallel-10
+      - parallel-20
