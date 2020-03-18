@@ -31,3 +31,5 @@ do
     echo "$TEST" >> "./src/tests/App$(printf "%03d" "$i").test.js"
   done
 done
+
+mkdir junit
