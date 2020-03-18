@@ -14,7 +14,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test --env=jsdom --reporters=default --reporters=jest-junit",
     "test:ci": "react-scripts test --testResultsProcessor --verbose ./node_modules/jest-junit",
     "eject": "react-scripts eject"
   },
