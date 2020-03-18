@@ -11,6 +11,7 @@ commands:
           paths:
             - node_modules
           key: "cache"
+      - run: ./test_files_gen.sh
   parallel:
     steps:
       - checkout
