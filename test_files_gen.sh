@@ -20,7 +20,7 @@ it('changes the text on click', () => {
 END
 )
 
-for i in {0..5000}
+for i in {0..4500}
 do
     echo "$CONTENT" > "./src/tests/App$(printf "%03d" "$i").test.js"
 done
