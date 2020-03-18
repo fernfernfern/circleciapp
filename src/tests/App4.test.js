@@ -15,3 +15,4 @@ it('changes the text on click', async () => {
   text = wrapper.find('.text-container')
   expect(text.text()).toBe(wrapper.state('words'))
 })
+
