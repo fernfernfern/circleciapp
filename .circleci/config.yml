@@ -11,7 +11,7 @@ commands:
           paths:
             - node_modules
           key: -v1-{{ checksum "package-lock.json" }}-node
-      - run: ./test_files_gen.sh
+      - run: mkdir junit
   parallel:
     steps:
       - checkout
