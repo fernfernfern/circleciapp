@@ -19,7 +19,7 @@ commands:
       - run: echo $CIRCLE_NODE_INDEX
       - run: circleci tests glob src/tests/*.test.js | circleci tests split
       - run: circleci tests glob src/tests/*.test.js | circleci tests split | wc -l
-      - run: npm run test $(circleci tests glob src/tests/*.test.js | circleci tests split)
+      - run: npm run test:ci $(circleci tests glob src/tests/*.test.js | circleci tests split)
 
 executors:
   default:
@@ -34,7 +34,7 @@ jobs:
     steps:
       - checkout
       - deps
-      - run: npm run test
+      - run: npm run test:ci
   parallel-10:
     executor: default
     parallelism: 10
