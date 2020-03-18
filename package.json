@@ -15,7 +15,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom --testResultsProcessor=jest-junit",
-    "test:ci": "react-scripts test --ci --testResultsProcessor=jest-junit",
+    "test:ci": "JEST_JUNIT_OUTPUT_DIR='./junit' react-scripts test --ci --testResultsProcessor=jest-junit",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
