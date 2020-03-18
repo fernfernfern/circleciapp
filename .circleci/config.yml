@@ -34,26 +34,14 @@ jobs:
       - checkout
       - deps
       - run: npm run test
-  parallel-5:
-    executor: default
-    parallelism: 5
-    steps:
-      - parallel
   parallel-10:
     executor: default
     parallelism: 10
     steps:
       - parallel
-  parallel-20:
-    executor: default
-    parallelism: 20
-    steps:
-      - parallel
 
 workflows:
-  what:
+  my-cool-workflow:
     jobs:
       - build
-      - parallel-5
       - parallel-10
-      - parallel-20
