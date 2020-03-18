@@ -22,6 +22,8 @@ commands:
 
 executors:
   default:
+    environment:
+      NODE_OPTIONS: --max-old-space-size=4096
     docker:
       - image: circleci/node
 
