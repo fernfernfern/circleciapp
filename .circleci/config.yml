@@ -34,7 +34,7 @@ jobs:
     steps:
       - checkout
       - deps
-      - run: npm run test:ci
+      - run: npm run test:ci $(circleci tests glob src/tests/*.test.js
   parallel-10:
     executor: default
     parallelism: 10
