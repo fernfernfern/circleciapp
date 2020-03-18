@@ -11,18 +11,26 @@
     "react-scripts": "1.0.10",
     "react-test-renderer": "^15.6.1"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom --testResultsProcessor=jest-junit",
-    "test:ci": "JEST_JUNIT_OUTPUT_DIR='./junit' react-scripts test --ci --testResultsProcessor=jest-junit",
-    "eject": "react-scripts eject"
-  },
   "devDependencies": {
     "babel-jest": "^20.0.3",
     "enzyme": "^2.9.1",
     "enzyme-to-json": "^1.5.1",
     "jest": "^20.0.4",
     "react-addons-test-utils": "^15.6.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom --testResultsProcessor=jest-junit",
+    "test:ci": "react-scripts test --ci --testResultsProcessor=jest-junit",
+    "eject": "react-scripts eject"
+  },
+  "jest-junit": {
+    "suiteName": "jest tests",
+    "outputDirectory": "./junit",
+    "outputName": "junit.xml",
+    "uniqueOutputName": "false",
+    "ancestorSeparator": " › ",
+    "usePathForSuiteName": "true"
   }
 }
