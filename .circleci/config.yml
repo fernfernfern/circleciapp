@@ -23,6 +23,14 @@ commands:
       - run: mv junit.xml ./junit
       - store_test_results:
           path: ./junit
+  single:
+    steps:
+      - checkout
+      - deps
+      - run: npm run test:ci $(circleci tests glob src/tests/*.test.js)
+      - run: mv junit.xml ./junit
+      - store_test_results:
+          path: ./junit
 
 executors:
   default:
@@ -35,12 +43,10 @@ jobs:
   build:
     executor: default
     steps:
-      - checkout
-      - deps
-      - run: npm run test:ci $(circleci tests glob src/tests/*.test.js)
-  parallel-10:
+      - single
+  parallel-15:
     executor: default
-    parallelism: 10
+    parallelism: 15
     steps:
       - parallel
 
@@ -48,4 +54,4 @@ workflows:
   my-cool-workflow:
     jobs:
       - build
-      - parallel-10
+      - parallel-15
