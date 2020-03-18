@@ -17,6 +17,7 @@ commands:
       - checkout
       - deps
       - run: echo $CIRCLE_NODE_INDEX
+      - run: circleci tests glob src/tests/*.test.js | circleci tests split
       - run: circleci tests glob src/tests/*.test.js | circleci tests split | wc -l
       - run: npm run test $(circleci tests glob src/tests/*.test.js | circleci tests split)
 
