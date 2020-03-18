@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+rm -rf ./src/tests
+mkdir ./src/tests
+
 HEAD=$(cat <<-END
 import React from 'react'
 import { shallow } from 'enzyme'
@@ -26,7 +29,7 @@ for i in {0..500}
 do
   echo "$HEAD" > "./src/tests/App$(printf "%03d" "$i").test.js"
 
-  for l in {0..100}
+  for l in {0..500}
   do
     echo "$TEST" >> "./src/tests/App$(printf "%03d" "$i").test.js"
   done
