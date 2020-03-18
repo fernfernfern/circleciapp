@@ -47,4 +47,5 @@ workflows:
   what:
     jobs:
       - build
-      - build2
+      - parallel-5
+      - parallel-10
