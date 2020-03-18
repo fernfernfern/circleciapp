@@ -11,25 +11,37 @@ commands:
           paths:
             - node_modules
           key: "cache"
-
-jobs:
-  build:
-    parallelism: 5
-    docker:
-      - image: circleci/node
+  parallel:
     steps:
       - checkout
       - deps
       - run: echo $CIRCLE_NODE_INDEX
       - run: circleci tests glob src/tests/*.test.js | circleci tests split
       - run: npm run test $(circleci tests glob src/tests/*.test.js | circleci tests split)
-  build2:
+
+executors:
+  default:
     docker:
       - image: circleci/node
+
+jobs:
+  build:
+    executor: default
     steps:
       - checkout
       - deps
       - run: npm run test
+  parallel-5:
+    executor: default
+    parallelism: 5
+    steps:
+      - parallel
+  parallel-10:
+    executor: default
+    parallelism: 10
+    steps:
+      - parallel
+
 
 workflows:
   what:
