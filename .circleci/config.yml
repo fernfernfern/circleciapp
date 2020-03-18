@@ -20,6 +20,7 @@ commands:
       - run: circleci tests glob src/tests/*.test.js | circleci tests split
       - run: circleci tests glob src/tests/*.test.js | circleci tests split | wc -l
       - run: npm run test:ci $(circleci tests glob src/tests/*.test.js | circleci tests split)
+      - run: mv junit.xml ./junit
       - store_test_results:
           path: ./junit
 
