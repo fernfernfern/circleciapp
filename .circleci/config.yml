@@ -42,7 +42,11 @@ jobs:
     parallelism: 10
     steps:
       - parallel
-
+  parallel-20:
+    executor: default
+    parallelism: 20
+    steps:
+      - parallel
 
 workflows:
   what:
