@@ -3,6 +3,7 @@ version: 2.1
 commands:
   deps:
     steps:
+      - run: sudo apt-get install tar npm
       - restore_cache:
           keys: 
             -  -v1-{{ checksum "package-lock.json" }}-node
