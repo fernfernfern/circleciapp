@@ -37,7 +37,7 @@ executors:
     environment:
       NODE_OPTIONS: --max-old-space-size=4096
     docker:
-      - image: circleci/node
+      - image: amazonlinux:2
 
 jobs:
   build:
