@@ -55,4 +55,3 @@ workflows:
   my-cool-workflow:
     jobs:
       - build
-      - parallel-15
