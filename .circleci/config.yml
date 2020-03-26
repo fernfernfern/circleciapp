@@ -3,7 +3,7 @@ version: 2.1
 commands:
   deps:
     steps:
-      - run: yum install nodejs tar
+      - run: yum -y install nodejs tar 
       - restore_cache:
           keys: 
             -  -v1-{{ checksum "package-lock.json" }}-node
