@@ -5,7 +5,7 @@ jobs:
     build:
         working_directory: ~/project
         environment: 
-          NG_CLI_ANALYTICS: "false"
+          NG_CLI_ANALYTICS: "ci"
         docker:
             - image: circleci/node:10.16.3
         steps:
