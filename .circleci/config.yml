@@ -11,6 +11,7 @@ jobs:
         steps:
             # Checkout the code from the branch into the working_directory
             - checkout
+            - run: echo $NG_CLI_ANALYTICS
             - run:
                 name: update-npm
                 command: |
