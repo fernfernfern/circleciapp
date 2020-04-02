@@ -1,57 +1,19 @@
-version: 2.1
-
-commands:
-  deps:
-    steps:
-      - run: yum -y install nodejs tar 
-      - restore_cache:
-          keys: 
-            -  -v1-{{ checksum "package-lock.json" }}-node
-      - run: npm install
-      - save_cache:
-          paths:
-            - node_modules
-          key: -v1-{{ checksum "package-lock.json" }}-node
-      - run: mkdir junit
-  parallel:
-    steps:
-      - checkout
-      - deps
-      - run: echo $CIRCLE_NODE_INDEX
-      - run: circleci tests glob src/tests/*.test.js | circleci tests split
-      - run: circleci tests glob src/tests/*.test.js | circleci tests split | wc -l
-      - run: npm run test:ci $(circleci tests glob src/tests/*.test.js | circleci tests split)
-      - run: mv junit.xml ./junit
-      - store_test_results:
-          path: ./junit
-  single:
-    steps:
-      - checkout
-      - deps
-      - run: npm run test:ci $(circleci tests glob src/tests/*.test.js)
-      - run: mv junit.xml ./junit
-      - store_test_results:
-          path: ./junit
-
-executors:
-  default:
-    environment:
-      NODE_OPTIONS: --max-old-space-size=4096
-    docker:
-      - image: amazonlinux:2
+version: 2
 
 jobs:
-  build:
-    executor: default
-    steps:
-      - single
-  parallel-15:
-    executor: default
-    parallelism: 15
-    steps:
-      - parallel
-
-workflows:
-  my-cool-workflow:
-    jobs:
-      - build
+    # The build job
+    build:
+        working_directory: ~/project
+        environment: 
+          NG_CLI_ANALYTICS: "false"
+        docker:
+            - image: circleci/node:10.16.3
+        steps:
+            # Checkout the code from the branch into the working_directory
+            - checkout
+            - run:
+                name: update-npm
+                command: |
+                  sudo npm install -g @angular/cli@8.3.25
+                  ng analytics off
+                  ng --version
