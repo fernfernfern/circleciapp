@@ -10,6 +10,6 @@ jobs:
             - run:
                 command: |
                   touch test_list
-                  echo thisis a line\nthisisalsoaline\nhereisanotherline\nmorelines!\nokayneoughlines\n > test_list
+                  printf "thisis a line\nthisisalsoaline\nhereisanotherline\nmorelines!\nokayneoughlines\n" > test_list
                   cat test_list
                   cat test_list | circleci tests split
