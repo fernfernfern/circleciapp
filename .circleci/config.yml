@@ -7,9 +7,6 @@ jobs:
             - image: circleci/node
         steps:
             - checkout
-            - run:
-                command: |
-                  touch test_list
-                  printf "thisis a line\nthisisalsoaline\nhereisanotherline\nmorelines!\nokayneoughlines\n" > test_list
-                  cat test_list
-                  cat test_list | circleci tests split
+            - run: touch test_list && printf "thisis a line\nthisisalsoaline\nhereisanotherline\nmorelines!\nokayneoughlines\n" > test_list
+            - run: cat test_list
+            - run: cat test_list | circleci tests split
