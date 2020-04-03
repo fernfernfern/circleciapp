@@ -1,17 +1,15 @@
 version: 2
 
 jobs:
-    # The build job
     build:
-        working_directory: ~/project
+        parallelism: 5
         docker:
-            - image: circleci/node:10.16.3
+            - image: circleci/node
         steps:
-            # Checkout the code from the branch into the working_directory
             - checkout
             - run:
-                name: update-npm
                 command: |
-                  NG_CLI_ANALYTICS=ci sudo npm install -g @angular/cli@8.3.25 > /dev/null
-                  NG_CLI_ANALYTICS=ci ng analytics off > /dev/null
-                  NG_CLI_ANALYTICS=ci ng --version
+                  touch test_list
+                  echo thisis a line\nthisisalsoaline\nhereisanotherline\nmorelines!\nokayneoughlines\n > test_list
+                  cat test_list
+                  cat test_list | circleci tests split
