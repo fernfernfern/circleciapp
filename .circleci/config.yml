@@ -20,4 +20,4 @@ jobs:
         steps:
             - checkout
             - run-command:
-                NUM: 15
+                NUM: "15"
