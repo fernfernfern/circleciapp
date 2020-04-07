@@ -1,10 +1,23 @@
-version: 2
+version: 2.1
+
+commands:
+  run-command:
+    parameters:
+      NUM:
+        type: string
+    steps:
+      - checkout
+      - run:
+          command: |
+            echo "export MY_ENV=MY_<< parameters.NUM >>_ENV" >> $BASH_ENV
+            source $BASH_ENV 
+            echo $MY_ENV
 
 jobs:
     build:
-        parallelism: 5
         docker:
-            - image: circleci/node:lts@sha256:7169a0f2dd450f4de39f79c7f4b0bfc42b56f8512b086a982fcdfa0b36b448d3
+            - image: circleci/node
         steps:
             - checkout
-            - run: echo 'normal text' && export TERM=xterm && tput setaf 1 &&echo 'red text'
+            - run-command:
+                NUM: 15
