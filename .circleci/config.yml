@@ -15,19 +15,19 @@ jobs:
         steps:
             - checkout
             - when:
-                condition: << parameters.condition1 >>
+                condition: << pipeline.condition1 >>
                 steps:
                   - run: echo "top level condition 1"
                   - when:
-                      condition: << parameters.condition1 >>
+                      condition: << pipeline.condition1 >>
                       steps:
                         - run: echo "nested condition 1"
                   - whne:
-                      condition: << parameters.condition2 >>
+                      condition: << pipeline.condition2 >>
                       steps:
                         - run: echo "nested condition 2"
             - when:
-                condition: << parameters.condition2 >>
+                condition: << pipeline.condition2 >>
                 steps:
                   - run: echo "top level condition 2"
 
