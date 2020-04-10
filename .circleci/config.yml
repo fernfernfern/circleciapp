@@ -1,17 +1,12 @@
 version: 2.1
 
-commands:
-  run-command:
-    parameters:
-      NUM:
-        type: string
-    steps:
-      - checkout
-      - run:
-          command: |
-            echo "export MY_ENV=MY_<< parameters.NUM >>_ENV" >> $BASH_ENV
-            source $BASH_ENV 
-            echo $MY_ENV
+parameters:
+  condition1:
+    default: true
+    type: boolean
+  condition2:
+    default: false
+    type: boolead
 
 jobs:
     build:
@@ -19,5 +14,20 @@ jobs:
             - image: circleci/node
         steps:
             - checkout
-            - run-command:
-                NUM: "15"
+            - when:
+                condition: << parameters.condition1 >>
+                steps:
+                  - run: echo "top level condition 1"
+                  - when:
+                      condition: << parameters.condition1 >>
+                      steps:
+                        - run: echo "nested condition 1"
+                  - whne:
+                      condition: << parameters.condition2 >>
+                      steps:
+                        - run: echo "nested condition 2"
+            - when:
+                condition: << parameters.condition2 >>
+                steps:
+                  - run: echo "top level condition 2"
+
