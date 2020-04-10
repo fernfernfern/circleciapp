@@ -22,7 +22,7 @@ jobs:
                       condition: <<  pipeline.parameters.condition1 >>
                       steps:
                         - run: echo "nested condition 1"
-                  - whne:
+                  - when:
                       condition: <<  pipeline.parameters.condition2 >>
                       steps:
                         - run: echo "nested condition 2"
