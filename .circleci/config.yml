@@ -6,7 +6,7 @@ parameters:
     type: boolean
   condition2:
     default: false
-    type: boolead
+    type: boolean
 
 jobs:
     build:
