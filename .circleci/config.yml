@@ -1,12 +1,37 @@
 version: 2.1
 
-orbs:
-  windows: circleci/windows@2.4.0
+executors:
+  default:
+    docker:
+      - image: circleci/node
 
 jobs:
-    build:
-      executor: windows/default
-      steps:
-        - checkout 
-        - run: echo lol
+  build:
+    executor: default
+    steps:
+      - run: echo 
+  build2:
+    executor: default
+    parameters:
+      param-example:
+        type: boolean
+        default: false
+    steps:
+      - checkout 
+      - run: echo lol
+
+workflows:
+  exampe:
+    jobs:
+      - build
+      - build2:
+          requires:
+            - build
+          matrix:
+            parameters:
+              param-example:
+                - false
+                - true
+
+
 
