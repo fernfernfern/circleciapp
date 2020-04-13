@@ -1,33 +1,12 @@
 version: 2.1
 
-parameters:
-  condition1:
-    default: true
-    type: boolean
-  condition2:
-    default: false
-    type: boolean
+orbs:
+  windows: circleci/windows@2.4.0
 
 jobs:
     build:
-        docker:
-            - image: circleci/node
-        steps:
-            - checkout
-            - when:
-                condition: << pipeline.parameters.condition1 >>
-                steps:
-                  - run: echo "top level condition 1"
-                  - when:
-                      condition: <<  pipeline.parameters.condition1 >>
-                      steps:
-                        - run: echo "nested condition 1"
-                  - when:
-                      condition: <<  pipeline.parameters.condition2 >>
-                      steps:
-                        - run: echo "nested condition 2"
-            - when:
-                condition: <<  pipeline.parameters.condition2 >>
-                steps:
-                  - run: echo "top level condition 2"
+      executor: windows/stable
+      steps:
+        - checkout 
+        - run: echo lol
 
