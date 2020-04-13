@@ -22,7 +22,7 @@ jobs:
   build3:
     executor: default
     steps:
-      - run: hahaha
+      - run: echo hahaha
 
 workflows:
   exampe:
