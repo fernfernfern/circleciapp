@@ -9,35 +9,15 @@ jobs:
   build:
     executor: default
     steps:
-      - run: echo 
-  build2:
-    executor: default
-    parameters:
-      param-example:
-        type: boolean
-        default: false
-    steps:
-      - checkout 
-      - run: echo lol
-  build3:
-    executor: default
-    steps:
-      - run: echo hahaha
+      - run: sleep 100000 
+      - run:
+          when: always
+          command: echo I ran when cancelled
 
 workflows:
-  exampe:
+  example:
     jobs:
       - build
-      - build2:
-          requires:
-            - build
-          matrix:
-            parameters:
-              param-example:
-                - false
-                - true
-      - build3:
-          requires:
-            - build2
+
 
 
