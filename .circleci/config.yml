@@ -15,9 +15,10 @@ jobs:
   build:
     executor: default
     steps:
-      - run: | 
+      - run: |
+          set -x
           curl -H "Authorization: token $($GITHUB_TOKEN)" \
-            -d "{"state": "error","target_url": "https://example.com","description": "The test worked!","context": "continuous-integration/CircleCI-Test"}" \
+            -d '{"state": "error","target_url": "https://example.com","description": "The test worked!","context": "continuous-integration/CircleCI-Test"}' \
             https://api.github.com/repos/fernfernfern/circleciapp/statuses/$(CIRCLE_SHA1)
       - run: sleep 10 
   build2:
