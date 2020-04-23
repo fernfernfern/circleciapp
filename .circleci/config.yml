@@ -1,18 +1,37 @@
 version: 2.1
 
+reusejobs: &reusejobs
+  - build
+  - build2
+
+executors:
+  default:
+    docker:
+      - image: circleci/python
+
 jobs:
   build:
-    executorType: machine
+    executor: default
     steps:
       - run: sleep 10 
-      - run:
-          when: always
-          command: echo I ran when cancelled
+  build2:
+    executor: default
+    steps:
+      - run: sleep 10 
 
 workflows:
   example:
     jobs:
-      - build
-
+      *reusejobs
+  nightly:
+    jobs:
+      *reusejobs
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
 
 
