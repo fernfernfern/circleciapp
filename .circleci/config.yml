@@ -1,13 +1,8 @@
 version: 2.1
 
-executors:
-  default:
-    docker:
-      - image: circleci/node
-
 jobs:
   build:
-    executor: default
+    machine: true
     steps:
       - run: sleep 100000 
       - run:
