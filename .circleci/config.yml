@@ -2,7 +2,9 @@ version: 2.1
 
 reusejobs: &reusejobs
   - build
-  - build2
+  - build2:
+      requires:
+        - build
 
 executors:
   default:
