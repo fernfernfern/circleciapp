@@ -1,7 +1,7 @@
 version: 2.1
 
 parameters:
-  packge_name:
+  package_name:
     default: "test"
     type: string
 
