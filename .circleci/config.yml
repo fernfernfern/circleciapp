@@ -10,7 +10,7 @@ filtering: &filtering
     branches:
       ignore: /.*/
     tags:
-      only: /^<< pipeline.parameter.package_name >>.*/
+      only: /^<< pipeline.parameters.package_name >>.*/
 
 reusejobs: &reusejobs
   - build:
