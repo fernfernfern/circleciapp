@@ -1,10 +1,20 @@
 version: 2.1
 
+parameters:
+  packge_name:
+    default: "test"
+    type: string
+
+filtering: &filtering
+  filters:
+    branches:
+      ignore: /.*/
+    tags:
+      only: /^<< pipeline.parameter.package_name >>.*/
+
 reusejobs: &reusejobs
-  - build
-  - build2:
-      requires:
-        - build
+  - build:
+      *filtering
 
 executors:
   default:
@@ -15,12 +25,7 @@ jobs:
   build:
     executor: default
     steps:
-      - run: |
-          set -x
-          curl -H "Authorization: token ${GITHUB_TOKEN}" \
-            -d '{"state": "error","target_url": "https://example.com","description": "The test worked!","context": "continuous-integration/CircleCI-Test"}' \
-            https://api.github.com/repos/fernfernfern/circleciapp/statuses/${CIRCLE_SHA1}
-      - run: sleep 10 
+      - run: sleep 5 
   build2:
     executor: default
     steps:
@@ -30,15 +35,5 @@ workflows:
   example:
     jobs:
       *reusejobs
-  nightly:
-    jobs:
-      *reusejobs
-    triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only:
-                - master
 
 
