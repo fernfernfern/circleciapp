@@ -1,39 +1,19 @@
 version: 2.1
 
-parameters:
-  package_name:
-    default: "test"
-    type: string
-
-filtering: &filtering
-  filters:
-    branches:
-      ignore: /.*/
-    tags:
-      only: /^<< pipeline.parameters.package_name >>.*/
-
-reusejobs: &reusejobs
-  - build:
-      *filtering
-
 executors:
   default:
-    docker:
-      - image: circleci/python
+      machine:
+        image: circleci/classic:201808-01
 
 jobs:
   build:
     executor: default
     steps:
       - run: sleep 5 
-  build2:
-    executor: default
-    steps:
-      - run: sleep 10 
 
 workflows:
   example:
     jobs:
-      *reusejobs
+      - build
 
 
