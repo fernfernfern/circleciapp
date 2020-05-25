@@ -3,13 +3,13 @@ version: 2.1
 executors:
   default:
       machine:
-        image: circleci/classic:201808-01
+        image: circleci/classic:201703-01
 
 jobs:
   build:
     executor: default
     steps:
-      - run: sleep 5 
+      - run: lsb_release -a
 
 workflows:
   example:
