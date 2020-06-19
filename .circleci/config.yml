@@ -3,11 +3,15 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: cimg/base:2020.01
-      - image: circleci/postgres:12.2-ram
+      - image: postgres
+      - image: postgres
         name: unscrubbed-db
+        environment:
+          POSTGRES_HOST_AUTH_METHOD: trust
       - image: circleci/postgres:12.2-ram
         name: empty-db
+        environment:
+          POSTGRES_HOST_AUTH_METHOD: trust
 
 jobs:
   build:
