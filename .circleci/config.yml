@@ -6,12 +6,8 @@ executors:
       - image: cimg/base:2020.01
       - image: circleci/postgres:12.2-ram
         name: unscrubbed-db
-        environment:
-          POSTGRES_HOST_AUTH_METHOD: trust
-      - image: circleci/postgres:12.2
+      - image: circleci/postgres:12.2-ram
         name: empty-db
-        environment:
-          POSTGRES_HOST_AUTH_METHOD: trust
 
 jobs:
   build:
