@@ -8,7 +8,7 @@ executors:
         name: unscrubbed-db
         environment:
           POSTGRES_HOST_AUTH_METHOD: trust
-      - image: circleci/postgres:12.2-ram
+      - image: circleci/postgres:12.2
         name: empty-db
         environment:
           POSTGRES_HOST_AUTH_METHOD: trust
