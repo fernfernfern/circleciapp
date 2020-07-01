@@ -5,14 +5,21 @@ executors:
     docker:
       - image: cimg/base:2020.01
 
-
 jobs:
   build:
     executor: default
     steps:
       - checkout
       - setup_remote_docker
-      - run: sleep 20
+      - run:
+          command: |
+            cat \<< EOF | ssh remote-docker "sudo tee -a /etc/default/docker"
+            {
+              "registry-mirrors": ["https://mirror.gcr.io"]
+            }
+            EOF
+            ssh remote-docker "sudo service docker restart"
+            docker system info
 
 workflows:
   example:
