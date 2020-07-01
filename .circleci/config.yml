@@ -4,20 +4,15 @@ executors:
   default:
     docker:
       - image: cimg/base:2020.01
-      - image: postgres
-        name: unscrubbed-db
-        environment:
-          POSTGRES_HOST_AUTH_METHOD: trust
-      - image: postgres
-        name: empty-db
-        environment:
-          POSTGRES_HOST_AUTH_METHOD: trust
+
 
 jobs:
   build:
     executor: default
     steps:
-      - run: sleep 20
+      - checkout
+      - setup_remote_docker
+      - sleep 20
 
 workflows:
   example:
