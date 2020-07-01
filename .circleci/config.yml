@@ -12,7 +12,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - sleep 20
+      - run: sleep 20
 
 workflows:
   example:
