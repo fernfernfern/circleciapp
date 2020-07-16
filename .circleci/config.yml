@@ -1,34 +1,24 @@
 version: 2.1
-
-executors:
-  default:
-    docker:
-      - image: cimg/base:2020.01
-
-
 jobs:
   build:
-    executor: default
+    machine: true
     steps:
-      - checkout
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./src/*.js
-  build2:
-    executor: default
+      - run: echo this is a step
+  deploy:
+    machine: true
     steps:
-      - attach_workspace:
-          at: .
-      - run: ls
-      - run: sleep 20
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh ubuntu@52.221.66.74 'cd /var/www/asksteve-new;touch circleci.txt;'
 
 workflows:
-  example:
+  build-and-deploy:
     jobs:
       - build
-      - build2:
+      - deploy:
           requires:
-            - build
-
-
+            - build # only deploy once build job has completed
+          filters:
+            branches:
+              only: circleci-project-setup # only deploy on the master branch
