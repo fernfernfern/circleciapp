@@ -12,7 +12,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh ubuntu@52.221.66.74 'cd /var/www/asksteve-new;touch circleci.txt;'
+            echo lol
 
 workflows:
   build-and-deploy:
