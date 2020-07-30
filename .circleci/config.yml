@@ -1,9 +1,11 @@
 version: 2.1
 jobs:
   build:
-    machine: true
+    machine: 
+      image: ubuntu-1604:202007-01
     steps:
-      - run: echo this is a step
+      - run: sleep 10
+      - run: docker version
   deploy:
     machine: true
     steps:
