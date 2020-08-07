@@ -17,7 +17,6 @@ class App extends Component {
       words: words(10).join(' ')
     })
   }
-
   render() {
 
     console.log('random nge!')
