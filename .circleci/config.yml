@@ -1,31 +1,30 @@
 version: 2.1
+
 jobs:
-  build:
-    machine: 
-      image: ubuntu-1604:202007-01
-    steps:
-      - run: sleep 10
-      - run: docker version
-  deploy:
-    machine: true
+  build-and-test:
+    docker:
+      # Primary container image where all commands run
+      - image: olavurmortensen/pedgraph
+        environment:
+          NEO4J_URI: bolt://localhost:7687
+
+      # Service container image available at `host: localhost`
+      - image: neo4j
+        entrypoint: /bin/bash
+        command: -c "/sbin/tini -g -s -v -- /docker-entrypoint.sh neo4j"
+        environment:
+          # No user/password needed to connect to DB.
+          NEO4J_AUTH: none
+          TINI_VERBOSITY: 3
+          # This environment variable doesn't help.
+          #NEO4J_HOME: /var/lib/neo4j
+    working_directory: /pedgraph
     steps:
       - run:
-          name: Deploy Over SSH
-          command: |
-            echo lol
+          command: python pedgraph/test/test.py
+          name: Test
 
 workflows:
-  build-and-deploy:
+  main:
     jobs:
-      - build:
-          filters:
-            tags:
-              only: /.*/
-      - deploy:
-          requires:
-            - build # only deploy once build job has completed
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              only: circleci-project-setup # only deploy on the master branch
+      - build-and-test
