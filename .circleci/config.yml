@@ -13,7 +13,6 @@ jobs:
       - image: mariadb:10.4
         environment:
           MYSQL_ALLOW_EMPTY_PASSWORD: 1
-    working_directory: /var/www/html/project
 
     shell: /bin/sh
     steps:
