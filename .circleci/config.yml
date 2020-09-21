@@ -1,19 +1,18 @@
 version: 2.1
 
+parameters:
+  envar:
+    default: "test"
+    type: string
+
 workflows:
   blah:
     jobs:
-      - maven_test
+      - job
 
 jobs:
-  maven_test:
+  job:
     docker:
-      - image: juampynr/drupal8ci:latest
-      - image: selenium/standalone-chrome-debug:3.141.59-zirconium
-      - image: mariadb:10.4
-        environment:
-          MYSQL_ALLOW_EMPTY_PASSWORD: 1
-
-    shell: /bin/sh
+      - image: cimg:base
     steps:
-      - run: echo test
+      - run: echo << pipeline.parameters.envar >>\<< 
