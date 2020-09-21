@@ -13,6 +13,6 @@ workflows:
 jobs:
   job:
     docker:
-      - image: cimg/base
+      - image: cimg/base:stable
     steps:
       - run: echo << pipeline.parameters.envar >>\<< 
