@@ -15,4 +15,4 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - run: echo << pipeline.parameters.envar >>\<< 
+      - run: echo "<< pipeline.parameters.envar >>\<< \>>"
