@@ -13,6 +13,6 @@ workflows:
 jobs:
   job:
     docker:
-      - image: circleci/cimg
+      - image: cimg/base
     steps:
       - run: echo << pipeline.parameters.envar >>\<< 
