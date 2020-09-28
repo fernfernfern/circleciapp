@@ -1,9 +1,9 @@
 version: 2.1
 
-parameters:
-  envar:
-    default: "test"
-    type: string
+executors:
+  default:
+    docker:
+      - image: 
 
 workflows:
   blah:
@@ -11,8 +11,7 @@ workflows:
       - job
 
 jobs:
-  job:
-    docker:
-      - image: cimg/base:stable
+  job1:
+    executor: default
     steps:
-      - run: echo "<< pipeline.parameters.envar >>\<< \>>"
+      - run: echo 
