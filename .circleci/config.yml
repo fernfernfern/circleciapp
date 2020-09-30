@@ -1,17 +1,15 @@
 version: 2.1
 
-executors:
-  default:
-    docker:
-      - image: 
-
-workflows:
-  blah:
-    jobs:
-      - job
-
 jobs:
   job1:
-    executor: default
+    docker:
+      - image: cimg/base:stable
     steps:
-      - run: echo 
+      - run: echo lol
+
+workflows:
+  integration_tests:
+    jobs:
+      - job1:
+          post-steps:
+            - run: echo $BUILD_NUM
