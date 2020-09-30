@@ -12,4 +12,4 @@ workflows:
     jobs:
       - job1:
           post-steps:
-            - run: echo $BUILD_NUM
+            - run: echo ${BUILD_NUM}
