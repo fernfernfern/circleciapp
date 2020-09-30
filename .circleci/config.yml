@@ -12,4 +12,5 @@ workflows:
     jobs:
       - job1:
           post-steps:
-            - run: echo ${BUILD_NUM}
+            - run: echo ${CIRCLE_BUILD_NUM}
+            - run: echo $CIRCLE_BUILD_NUM
