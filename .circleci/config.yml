@@ -5,12 +5,27 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
+      - run: sleep 60
+  job2:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run: exit 1
+  job3:
+    docker:
+      - image: cimg/base:stable
+    steps:
       - run: echo lol
 
 workflows:
   integration_tests:
     jobs:
-      - job1:
-          post-steps:
-            - run: echo ${CIRCLE_BUILD_NUM}
-            - run: echo $CIRCLE_BUILD_NUM
+      - job1
+      - job2
+      - hold: 
+          type: approval 
+          requires: 
+            - job1
+      - job3:
+          requires:
+            - hold
