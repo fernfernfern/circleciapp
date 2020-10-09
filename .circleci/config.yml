@@ -21,18 +21,18 @@ workflows:
   integration_tests:
     jobs:
       - job1
-      - hold2: 
+      - hold: 
           type: approval 
           requires: 
             - job1
       - job2:
           type: approval
           requires:
-            - job2
-      - hold: 
+            - hold
+      - hold2: 
           type: approval 
           requires: 
             - job2
       - job3:
           requires:
-            - hold
+            - hold2
