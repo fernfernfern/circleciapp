@@ -5,7 +5,7 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - run: |
+      - run: | 
           commit_message=$(git log -1 HEAD --pretty=format:%s)
           if [[ $commit_message == *"custom-identifier"* ]]; then
           curl --request POST \
