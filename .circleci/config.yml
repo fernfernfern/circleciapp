@@ -9,7 +9,7 @@ jobs:
     steps:
     - checkout
     - restore_cache:
-        keys: [v1-dep-{{ arch }}]
+        keys: ["v1-dep-{{ arch }}"]
     - run: echo $CIRCLE_TEST_REPORTS
     - run: echo $TESTOPTS
 workflows:
