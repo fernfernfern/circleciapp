@@ -1,52 +1,19 @@
 version: 2.1
-      
 jobs:
-  job:
+  build:
     docker:
-      - image: cimg/base:stable
+    - image: circleci/python:latest
+      environment:
+        CIRCLE_TEST_REPORTS: test
+        TESTOPTS: --ci-dir=${CIRCLE_TEST_REPORTS}/reports
     steps:
-      - checkout
-      - run: | 
-          commit_message=$(git log -1 HEAD --pretty=format:%s)
-          if [[ $commit_message == *"custom-identifier"* ]]; then
-          curl --request POST \
-            --url https://circleci.com/api/v2/workflow/$CIRCLE_WORKFLOW_ID/cancel \
-            --header "Circle-Token: ${CIRCLE_TOKEN}"
-          fi
-      - run: sleep 60
-  job1:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - run: sleep 60
-  job2:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - run: exit 1
-  job3:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - run: ls /tmp
-
+    - checkout
+    - restore_cache:
+        keys: 
+          - v1-dep-{{ arch }}
+    - run: echo $CIRCLE_TEST_REPORTS
+    - run: echo $TESTOPTS
 workflows:
-  integration_tests:
+  workflow:
     jobs:
-      - job
-      - job1
-      - hold: 
-          type: approval 
-          requires: 
-            - job1
-      - job2:
-          type: approval
-          requires:
-            - hold
-      - hold2: 
-          type: approval 
-          requires: 
-            - job2
-      - job3:
-          requires:
-            - hold2
+    - build
