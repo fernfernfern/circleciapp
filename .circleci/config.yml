@@ -13,7 +13,7 @@ workflows:
 jobs:
   use-docker-image:
     docker:
-      - image: fernfernfern/myapp
+      - image: fernfernfern/myapp:master
     steps:
       - run: echo I'm inside the container!
   build-docker-image:
