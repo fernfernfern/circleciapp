@@ -1,0 +1,849 @@
+version: 2.1
+
+orbs:
+  aws-s3: circleci/aws-s3@1.0.13
+  aws-cli: circleci/aws-cli@1.3.0
+references:
+  redundant_build: &redundant_build
+    run:
+      name: Checking for redundant build
+      command: |
+        git remote update
+        [ $(git rev-parse origin/$CIRCLE_BRANCH) == "$CIRCLE_SHA1" ] || (echo "Build out of date with branch" && circleci-agent step halt)
+
+  set_env_variables: &set_env_variables
+    run:
+      name: Set ENV variables based on branch
+      command: |
+        PHOENIX_ENV=$([ "<< parameters.repo >>" == deploy ] && echo "production" || echo "staging")
+        echo "export PHOENIX_ENV=\"$PHOENIX_ENV\"" >> $BASH_ENV
+        echo "export NODE_OPTIONS=--max_old_space_size=4096" >> $BASH_ENV
+        source $BASH_ENV
+
+  # CircleCI uses its own IAM role for this, with ECS access
+  authenticate_ecr: &authenticate_ecr
+    run:
+      name: Authenticate with ECR
+      command: |
+        aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 815405947909.dkr.ecr.us-west-2.amazonaws.com
+
+# Commands are new, CircleCI's version of subroutines. A little more advanced than references,
+# and just added in version 2.1
+commands:
+  build_image:
+    description:
+      "Uses the current workspace to build an image of a specific type with this
+      SHA"
+    parameters:
+      repo:
+        type: "string"
+        default: "$CIRCLE_BRANCH"
+      tag:
+        type: "string"
+        default: "$CIRCLE_SHA1"
+      mark_latest:
+        type: "boolean"
+        default: true
+
+    steps:
+      - *set_env_variables
+      - *authenticate_ecr
+
+      - run:
+          name: Build New Image
+          command: |
+            echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+            docker build -f docker/phoenix/Dockerfile --build-arg build_number=$CIRCLE_BUILD_NUM --build-arg environment=$PHOENIX_ENV -t $AWS_ECR_URL/phoenix/<< parameters.repo >>:<< parameters.tag >> .
+
+      - run:
+          name: Push to AWS ECR
+          command: |
+            docker push $AWS_ECR_URL/phoenix/<< parameters.repo >>:<< parameters.tag >>
+
+      - when:
+          condition: << parameters.mark_latest >>
+          steps:
+            - run:
+                name: Tag and push as latest
+                command: |
+                  docker tag $AWS_ECR_URL/phoenix/<< parameters.repo >>:<< parameters.tag >> $AWS_ECR_URL/phoenix/<< parameters.repo >>:latest
+                  docker push $AWS_ECR_URL/phoenix/<< parameters.repo >>:latest
+
+  build_nginx_image:
+    description: "Uses the current workspace to build the latest nginx image"
+    parameters:
+      repo:
+        type: "string"
+        default: "$CIRCLE_BRANCH"
+      tag:
+        type: "string"
+        default: "latest"
+
+    steps:
+      - install_aws
+      - *set_env_variables
+      - *authenticate_ecr
+
+      - run:
+          name: Build New Nginx Image
+          command:
+            docker build -f docker/nginx/Dockerfile -t
+            $AWS_ECR_URL/phoenix_nginx/<< parameters.repo >>:<< parameters.tag >> .
+
+      - run:
+          name: Push to AWS ECR
+          command:
+            docker push $AWS_ECR_URL/phoenix_nginx/<< parameters.repo >>:<< parameters.tag >>
+
+  deploy_image:
+    description:
+      "Given a branch and a tag, deploys a specific image to its corresponding
+      environment"
+    parameters:
+      repo:
+        type: "string"
+        default: "$CIRCLE_BRANCH"
+      tag:
+        type: "string"
+        default: "$CIRCLE_SHA1"
+      cluster:
+        type: "string"
+        default: "$PHOENIX_ENV"
+      include-rpush:
+        type: "boolean"
+        default: true
+      include-workers:
+        type: "boolean"
+        default: true
+
+    steps:
+      - *set_env_variables
+
+      - run:
+          name: Deploy the Webserver
+          command: |
+            cd .circleci
+            ./deploy-ecs.sh -b << parameters.repo >> -i << parameters.tag >> -s webserver -n latest -d << parameters.cluster >>
+
+      - when:
+          condition: << parameters.include-workers >>
+          steps:
+            - run:
+                name: Deploy the Workers
+                command: |
+                  cd .circleci
+                  ./deploy-ecs.sh -b << parameters.repo >> -i << parameters.tag >> -s worker -n latest -d << parameters.cluster >>
+
+      - when:
+          condition: << parameters.include-rpush >>
+          steps:
+            - run:
+                name: Deploy Rpush
+                command: |
+                  cd .circleci
+                  ./deploy-ecs.sh -b << parameters.repo >> -i << parameters.tag >> -s rpush -d << parameters.cluster >>
+  seed_db:
+    description:
+      "Set up and configure the database instance for a job. If the DB has not
+      changed, load the data using a postgres dump. Otherwise, run db reset"
+    parameters:
+      dockerize_version:
+        type: string
+        default: v0.3.0
+    steps:
+      - run: echo 'export PATH=/usr/lib/postgresql/9.6/bin/:$PATH' >> $BASH_ENV
+      - run:
+          name: Install Postgres Client.
+          command: |
+            sudo apt install lsb-release
+            sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+            wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+            sudo apt update
+            sudo apt install -y postgresql-client-9.6
+      - run:
+          name: Wait for postgres
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Database Checksum
+          command: |
+            find phoenix/db -type f -exec md5sum {} \; | sort -k 2 > db_dir_checksums.txt
+            md5sum phoenix/config/database.yml >> db_dir_checksums.txt
+            echo $PARALLEL_TEST_PROCESSORS >> db_dir_checksums.txt
+            psql -U $PG_USERNAME -d $POSTGRES_DB --host $PG_HOST -A -t -c 'SELECT version()' >> db_dir_checksums.txt
+      - restore_cache:
+          keys:
+            - v2-database-schema-{{ checksum "db_dir_checksums.txt" }}
+      - run:
+          name: Database Setup
+          command: |
+            if [ -e ~/project/postgres_dump.sql ]
+            then
+              echo "Restoring databases dump"
+              psql -U $PG_USERNAME -d $POSTGRES_DB --host $PG_HOST -f ~/project/postgres_dump.sql
+            else
+              echo "Setting up databases"
+              cd phoenix && bundle exec rake parallel:setup
+              echo "Dumping databases"
+              pg_dumpall -h $PG_HOST -U $PG_USERNAME -f ~/project/postgres_dump.sql
+            fi
+      - save_cache:
+            key: v2-database-schema-{{ checksum "db_dir_checksums.txt" }}
+            paths:
+              - ~/project/postgres_dump.sql
+
+  build_frontend:
+    description:
+      "Build a frontend bundle if the contents of the bundle have changed.
+       Warning: his file uses the ~/project working directory."
+    parameters:
+      phoenix_env:
+        type: "string"
+      generate_sourcemap:
+        type: "boolean"
+        default: true
+        description: "Boolean to generate sourcemaps"
+    steps:
+      - run:
+          name: client build checksum
+          command: |
+            find izakaya/src -type f -exec md5sum {} \; | sort -k 2 > client_build_checksum.txt
+            md5sum izakaya/package-lock.json >> client_build_checksum.txt
+            md5sum izakaya/package.json >> client_build_checksum.txt
+            md5sum izakaya/tsconfig.json >> client_build_checksum.txt
+            echo << parameters.phoenix_env >> >> client_build_checksum.txt
+      - restore_cache:
+          keys:
+            - client-v3-okr-build-{{ checksum "client_build_checksum.txt" }}
+      - run:
+          name: build webpack bundle for feature tests if they have changed
+          command: |
+            cd izakaya
+            if [ ! -d build ];
+            then
+              CI=false GENERATE_SOURCEMAP=<< parameters.generate_sourcemap >> npm run-script build:<< parameters.phoenix_env >>
+            fi
+            npm run-script phoenix-build
+      - save_cache:
+            key: client-v3-okr-build-{{ checksum "client_build_checksum.txt" }}
+            paths:
+              - ~/project/izakaya/build
+
+  deploy_frontend:
+    description:
+      "Deploy the frontend bundle to a specified S3 container.
+       Warning: his file uses the ~/project working directory."
+    parameters:
+      cloudfront_distribution_id:
+        type: "string"
+      s3_bucket:
+        type: "string"
+    steps:
+      - aws-s3/sync:
+          from: izakaya/build
+          to: << parameters.s3_bucket >>
+          arguments: |
+            --acl public-read \
+            --cache-control "max-age=86400"
+          overwrite: true
+      - aws-cli/install
+      - aws-cli/setup
+      - run:
+          name: Invalidate Cache
+          command: |
+            aws cloudfront create-invalidation --distribution << parameters.cloudfront_distribution_id >> --paths "/index.html"
+
+  install_aws:
+    description:
+      "Sets up and configures AWS"
+    steps:
+      - run:
+          command: |
+            echo "export AWS_DEFAULT_REGION=us-west-2" >> $BASH_ENV
+            source $BASH_ENV
+      - aws-cli/install:
+          skip-install-check: true
+      - aws-cli/setup
+
+executors:
+  bonsai_executor:
+    docker:
+      - image: circleci/ruby:2.7.0-node-browsers
+        environment:
+          PG_USERNAME: phoenix
+          POSTGRES_DB: phoenix_test
+          PG_HOST: localhost
+          RAILS_ENV: test
+          PARALLEL_TEST_PROCESSORS: 4
+      - image: circleci/postgres:9.6-alpine-ram
+        environment:
+          POSTGRES_USER: phoenix
+          POSTGRES_DB: phoenix_test
+          POSTGRES_PASSWORD: ""
+
+jobs:
+  checkout_code:
+    executor: bonsai_executor
+    steps:
+      - checkout
+
+      # restore
+      - save_cache:
+          key: v1-repo-{{ arch }}-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/project
+
+  bundle_dependencies:
+    executor: bonsai_executor
+    working_directory: ~/project/phoenix
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ arch }}-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+            - v1-repo-{{ arch }}-{{ .Branch }}
+            - v1-repo
+      # Restore bundle cache
+      - restore_cache:
+          keys:
+            - rails-v5-okr-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+            - rails-v5-okr-{{ arch }}-{{ .Branch }}
+            - rails-v5-okr-{{ arch }}
+      - run:
+          name: install bundle dependencies
+          command:
+            bundle install --without development --jobs=4 --retry=3 --path vendor/bundle
+      # Store bundle cache
+      - save_cache:
+          key: rails-v5-okr-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - ~/project/phoenix/vendor/bundle
+
+  install_frontend_dependencies:
+    executor: bonsai_executor
+    working_directory: ~/project/izakaya
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ arch }}-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+            - v1-repo-{{ arch }}-{{ .Branch }}
+            - v1-repo
+      # Restore npm cache
+      - restore_cache:
+          keys:
+            - npm-v4-okr-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - npm-v4-okr-{{ .Branch }}-
+            - npm-v4-okr-
+      - run:
+          name: Add Github to known hosts
+          command: |
+            mkdir ~/.ssh
+            touch ~/.ssh/known_hosts
+            ssh-keyscan github.com > ~/.ssh/known_hosts
+      - run:
+          name: install npm dependencies
+          command:
+            npm install
+          # Store npm cache
+      - save_cache:
+          key: npm-v4-okr-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/project/izakaya/node_modules
+
+  # This job will run the build command on the frontend bundle, and will push
+  # the bundle to S3
+  build_and_deploy_frontend:
+    executor: bonsai_executor
+    working_directory: ~/project
+    environment:
+      AWS_DEFAULT_REGION: us-west-2
+    parameters:
+      repo:
+        type: "string"
+        default: "$CIRCLE_BRANCH"
+    steps:
+      - *set_env_variables
+      - restore_cache:
+          keys:
+            - v1-repo-{{ arch }}-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+            - v1-repo-{{ arch }}-{{ .Branch }}
+            - v1-repo
+      # Restore npm cache
+      - restore_cache:
+          keys:
+            - npm-v4-okr-{{ .Branch }}-{{ checksum "izakaya/package-lock.json" }}
+            - npm-v4-okr-{{ .Branch }}-
+            - npm-v4-okr-
+      - build_frontend:
+          phoenix_env: ${PHOENIX_ENV}
+          generate_sourcemap: false
+      - run:
+          name: Set the appropriate env variables used for deployment based on phoenix_env
+          command: |
+            if [ "${PHOENIX_ENV}" == "production" ];
+            then
+              echo 'export CLOUDFRONT_DISTRIBUTION_ID="E2156PL9LW2R70"' >> $BASH_ENV
+              echo 'export S3_BUCKET="s3://production-app.gethearth.com"' >> $BASH_ENV
+            else
+              echo 'export CLOUDFRONT_DISTRIBUTION_ID="E1BK0VJW3O4ANQ"' >> $BASH_ENV
+              echo 'export S3_BUCKET="s3://staging-hearth-app.shogun.cool"' >> $BASH_ENV
+            fi
+            source $BASH_ENV
+      - deploy_frontend:
+          cloudfront_distribution_id: ${CLOUDFRONT_DISTRIBUTION_ID}
+          s3_bucket: ${S3_BUCKET}
+
+  run_rspec_tests:
+    executor: bonsai_executor
+    working_directory: ~/project
+    parallelism: 2
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ arch }}-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+            - v1-repo-{{ arch }}-{{ .Branch }}
+            - v1-repo
+      - restore_cache:
+          keys:
+            - rails-v5-okr-{{ arch }}-{{ .Branch }}-{{ checksum "phoenix/Gemfile.lock" }}
+            - rails-v5-okr-{{ arch }}-{{ .Branch }}
+            - rails-v5-okr-{{ arch }}
+      - run: cd phoenix && bundle --path vendor/bundle
+      - run:
+          name: configure env vars
+          command:
+            mkdir phoenix/config/env_vars && cp -R config/test/api/*
+            phoenix/config/env_vars
+      - seed_db
+      - run:
+          name: Create test results directory
+          command: mkdir /tmp/test-results
+      - restore_cache:
+          keys:
+            - v1-test-times-{{ .Branch }}
+            - v1-test-times-master
+      - run:
+          name: run tests
+          command: |
+            cd phoenix
+            bundle exec parallel_test \
+            -t rspec \
+            -n 4 \
+            --runtime-log /tmp/test-results/parallel_runtime_rspec.log \
+            -- --format progress \
+            --format RspecJunitFormatter \
+            --out /tmp/test-results/rspec.xml  \
+            --format ParallelTests::RSpec::RuntimeLogger \
+            --order=random \
+            --out /tmp/test-results/parallel_runtime_rspec.log \
+            -- $(circleci tests glob "spec/{controllers,interactors,jobs,lib,mailers,models,modules,requests}/**/*_spec.rb" | circleci tests split --split-by=timings)
+      - save_cache:
+          key: v1-test-times-{{ .Branch }}-{{ epoch }}
+          paths:
+            - tmp/test-results/parallel_runtime_rspec.log
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+
+  run_property_tests:
+    executor: bonsai_executor
+    working_directory: ~/project
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ arch }}-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+            - v1-repo-{{ arch }}-{{ .Branch }}
+            - v1-repo
+      - restore_cache:
+          keys:
+            - rails-v5-okr-{{ arch }}-{{ .Branch }}-{{ checksum "phoenix/Gemfile.lock" }}
+            - rails-v5-okr-{{ arch }}-{{ .Branch }}
+            - rails-v5-okr-{{ arch }}
+      - run: cd phoenix && bundle --path vendor/bundle
+      - run:
+          name: configure env vars
+          command:
+            mkdir phoenix/config/env_vars && cp -R config/test/api/*
+            phoenix/config/env_vars
+      - seed_db
+      - run:
+          name: run tests
+          command: |
+            cd phoenix
+            bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/test-results/rspec-properties.xml spec/properties/
+
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+
+  run_frontend_tests:
+    executor: bonsai_executor
+    working_directory: ~/project/izakaya
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ arch }}-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+            - v1-repo-{{ arch }}-{{ .Branch }}
+            - v1-repo
+      - restore_cache:
+          keys:
+            - npm-v4-okr-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - npm-v4-okr-{{ .Branch }}-
+            - npm-v4-okr-
+      - run:
+          name: run fe linter
+          command: npm run-script lint
+      - run:
+          name: run frontend tests
+          command: npm run-script test:ci
+          environment:
+            JEST_JUNIT_OUTPUT: "/tmp/test-results/js-test-results.xml"
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results/js-test-results.xml
+          destination: jest-results
+      - store_artifacts:
+          path: /tmp/test-results/clover.xml
+          destination: jest-clover-results
+      - store_artifacts:
+          path: /tmp/test-results/coverage-final.json
+          destination: jest-coverage-results
+
+  run_feature_specs:
+    executor: bonsai_executor
+    working_directory: ~/project
+    parameters:
+      repo:
+        type: "string"
+        default: "$CIRCLE_BRANCH"
+    steps:
+      - *set_env_variables
+      - restore_cache:
+          keys:
+            - v1-repo-{{ arch }}-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+            - v1-repo-{{ arch }}-{{ .Branch }}
+            - v1-repo
+      - restore_cache:
+          keys:
+            - rails-v5-okr-{{ arch }}-{{ .Branch }}-{{ checksum "phoenix/Gemfile.lock" }}
+            - rails-v5-okr-{{ arch }}-{{ .Branch }}
+            - rails-v5-okr-{{ arch }}
+      - restore_cache:
+          keys:
+            - npm-v4-okr-{{ .Branch }}-{{ checksum "izakaya/package-lock.json" }}
+            - npm-v4-okr-{{ .Branch }}-
+            - npm-v4-okr-
+      - run: cd phoenix && bundle --path vendor/bundle
+      - run:
+          name: configure env vars
+          command:
+            mkdir phoenix/config/env_vars && cp -R config/test/api/*
+            phoenix/config/env_vars
+      - seed_db
+      - build_frontend:
+          phoenix_env: test
+          generate_sourcemap: false
+      - run:
+          name: run feature specs
+          command: cd phoenix && bundle exec rspec --format progress --format RspecJunitFormatter -o /tmp/test-results/rspec-features.xml spec/features/
+
+       # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+      - store_artifacts:
+          path: phoenix/tmp/capybara
+          destination: capybara_screenshots
+
+  deploy_storybook:
+    executor: bonsai_executor
+    working_directory: ~/project/izakaya
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ arch }}-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+            - v1-repo-{{ arch }}-{{ .Branch }}
+            - v1-repo
+      - restore_cache:
+          keys:
+            - npm-v4-okr-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - npm-v4-okr-{{ .Branch }}-
+            - npm-v4-okr-
+      - run:
+          name: storybook build checksum
+          command: |
+            find src -type f -exec md5sum {} \; | sort -k 2 > storybook_build_checksum.txt
+            find .storybook/* -exec md5sum {} \; | sort -k 2 >> storybook_build_checksum.txt
+            md5sum package-lock.json >> storybook_build_checksum.txt
+            md5sum tsconfig.json >> storybook_build_checksum.txt
+      - restore_cache:
+          keys:
+            - storybook-v2-okr-build-{{ checksum "storybook_build_checksum.txt" }}
+      - run:
+          name: Gracefully skip job if Storybook checksum has not updated
+          command: |
+            if [ -d storybook-build ]; then
+              circleci-agent step halt
+            fi
+      - run: npm run build-storybook
+      - save_cache:
+          key: storybook-v2-okr-build-{{ checksum "storybook_build_checksum.txt" }}
+          paths:
+            - ~/project/izakaya/storybook-build
+      - run: echo "export PATH=$PATH:/root/bin" >> $BASH_ENV
+      - aws-s3/sync:
+          from: storybook-build
+          to: 's3://storybook.shoguninc.com'
+          arguments: |
+            --acl public-read \
+            --cache-control "max-age=86400"
+          overwrite: true
+  
+  deploy_netlify_frontend:
+    machine: true
+    steps:
+      - run:
+          name: Deploy latest site
+          command: |
+            # Get the ID of the latest deploy that we want to release
+            LATEST_DEPLOY_ID=$(curl -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID/deploys | jq --arg git_sha $CIRCLE_SHA1 -r '[.[] | select ((.context == "production") and (.commit_ref == $git_sha))][0] | .id')
+            # Restore to the latest deploy ID
+            curl -X "POST" -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" -d "" https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID/deploys/$LATEST_DEPLOY_ID/restore
+
+  build_nginx:
+    machine:
+      docker_layer_caching: true
+    environment:
+      AWS_DEFAULT_REGION: us-west-2
+    steps:
+      - checkout
+      - *redundant_build
+      - build_nginx_image
+
+  build:
+    machine:
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - *redundant_build
+      - install_aws
+      - build_image
+  
+  build_feature_api_preview:
+    machine:
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - install_aws
+      - build_image:
+          repo: "master"
+          tag: "feature-preview-$(echo $CIRCLE_BRANCH | sed -e 's/[^a-zA-Z0-9]/-/g')-$CIRCLE_SHA1"
+          mark_latest: false
+
+  deploy_feature_preview:
+    machine: true
+    steps:
+      - checkout
+      - install_aws
+      - run:
+          name: Run Deploy Script
+          command: |
+            cd .circleci
+            ./launch_santoku_preview.sh
+
+  delete_feature_preview:
+    machine: true
+    steps:
+      - checkout
+      - install_aws
+      - run:
+          name: Run Deploy Script
+          command: |
+            cd .circleci
+            ./launch_santoku_preview.sh -d
+
+  deploy_to_aws:
+    machine: true
+    steps:
+      - checkout
+      - *redundant_build
+      - install_aws
+      - deploy_image
+
+  tag_and_merge:
+      machine: true
+      steps:
+        - checkout
+        - run:
+            name: Merge deploy into master
+            command: |
+              export EMAIL="zak@shoguninc.com"
+              export AUTHOR="The Bonsai Phantom"
+              export GIT_COMMITTER_NAME="The Bonsai Phantom"
+              git config --global user.email "$EMAIL"
+              git config --global user.name "$AUTHOR"
+              git fetch origin
+              git checkout -B master origin/master
+              git merge -m 'Merging deploy into master' origin/deploy
+              git push origin master
+
+        - run:
+            name: Tag release
+            command: |
+              TSTAMP=$(date -u +"%Y-%m-%dT%H-%M-%SZ")
+              TAG=release-$TSTAMP
+              git describe --exact-match --tags HEAD || (git tag $TAG && git push origin $TAG)
+
+workflows:
+  version: 2
+  property-testing:
+    jobs:
+      - checkout_code
+      - bundle_dependencies:
+          requires:
+            - checkout_code
+          filters:
+            tags:
+              ignore: /.*/
+      - run_property_tests:
+          requires:
+            - bundle_dependencies
+          filters:
+            tags:
+              ignore: /.*/
+    triggers:
+      - schedule:
+          cron: "0 7 * * *"
+          filters:
+            branches:
+              only:
+                - master
+
+  feature_previews:
+    jobs:
+      - build_feature_api_preview:
+          filters:
+            branches:
+              ignore:
+                - master
+                - deploy
+
+      - approve_deploy:
+          type: approval
+          requires:
+            - build_feature_api_preview
+
+      - deploy_feature_preview:
+          requires:
+            - approve_deploy
+
+      - approve_delete:
+          type: approval
+          requires:
+            - build_feature_api_preview
+
+      - delete_feature_preview:
+          requires:
+            - approve_delete
+
+  build-and-deploy:
+    jobs:
+      - checkout_code
+      - bundle_dependencies:
+          requires:
+            - checkout_code
+          filters:
+            tags:
+              ignore: /.*/
+      - install_frontend_dependencies:
+          requires:
+            - checkout_code
+          filters:
+            tags:
+              ignore: /.*/
+      - run_rspec_tests:
+          requires:
+            - bundle_dependencies
+          filters:
+            tags:
+              ignore: /.*/
+      - run_frontend_tests:
+          requires:
+            - install_frontend_dependencies
+          filters:
+            tags:
+              ignore: /.*/
+      - build_and_deploy_frontend:
+          requires:
+            - run_frontend_tests
+            - install_frontend_dependencies
+          filters:
+            branches:
+              only:
+                - master
+                - deploy
+            tags:
+              ignore: /.*/
+      - run_feature_specs:
+          requires:
+            - bundle_dependencies
+            - install_frontend_dependencies
+          filters:
+            tags:
+              ignore: /.*/
+      - deploy_storybook:
+          requires:
+            - install_frontend_dependencies
+          filters:
+            branches:
+              only:
+                - master
+            tags:
+              ignore: /.*/
+      - build_nginx:
+          filters:
+            branches:
+              only:
+                - master
+                - deploy
+            tags:
+              ignore: /.*/
+      - build:
+          filters:
+            branches:
+              only:
+                - master
+                - deploy
+            tags:
+              ignore: /.*/
+      - deploy_to_aws:
+          requires:
+            - build_nginx
+            - build
+            # Maybe someday we'll only build passing branches. Hopefully soon.
+            # - run_rspec_tests
+            # - run_frontend_tests
+            # - run_feature_specs
+      # These are unrelated jobs and can run in parallel
+      - tag_and_merge:
+          requires:
+            - deploy_to_aws
+          filters:
+            branches:
+              only:
+                - deploy
+      - deploy_netlify_frontend:
+          requires:
+            - deploy_to_aws
+          filters:
+            branches:
+              only:
+                - deploy

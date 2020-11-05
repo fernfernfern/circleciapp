@@ -1,11 +1,34 @@
-
 version: 2.1
-
-jobs: 
-  build:
-    machine:
-      image: ubuntu-1604:201903-01
+orbs:
+  docker-cache: cci-x/docker-registry-image-cache@0.2.0
+workflows:
+  ci:
+    jobs:
+      - build-docker-image:
+          context: envars
+      - use-docker-image:
+          requires:
+            - build-docker-image
+jobs:
+  use-docker-image:
+    docker:
+      - image: fernfernfern/myapp
     steps:
-      - run: systeminfo
-      - checkout
-      - run: echo test
+      - run: echo I'm inside the container!
+  build-docker-image:
+    machine: true
+    steps:
+      - run:
+          name: docker login
+          command: |
+            echo "$REGISTRY_PASSWORD" | \
+              docker login --username "$REGISTRY_USERNAME" --password-stdin https://us.gcr.io
+      - docker-cache/with-save-restore-images:
+          repository: fernfernfern
+          images: 'myapp:${CIRCLE_BRANCH/\//-} myapp:master'
+          steps:
+            - docker-cache/build:
+                command: 'docker build -t myapp:${CIRCLE_BRANCH/\//-} .'
+      - run:
+          name: Test
+          command: ./test-all
