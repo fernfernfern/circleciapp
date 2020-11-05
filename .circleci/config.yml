@@ -19,6 +19,7 @@ jobs:
   build-docker-image:
     machine: true
     steps:
+      - checkout
       - run:
           name: docker login
           command: |
