@@ -15,7 +15,8 @@ jobs:
     docker:
       - image: fernfernfern/myapp:master
     steps:
-      - run: echo I'm inside the container!
+      - run: echo "I'm inside the container!"
+      
   build-docker-image:
     machine: true
     steps:
