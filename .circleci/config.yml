@@ -22,7 +22,7 @@ jobs:
           name: docker login
           command: |
             echo "$REGISTRY_PASSWORD" | \
-              docker login --username "$REGISTRY_USERNAME" --password-stdin https://us.gcr.io
+              docker login --username "$REGISTRY_USERNAME" --password-stdin
       - docker-cache/with-save-restore-images:
           repository: fernfernfern
           images: 'myapp:${CIRCLE_BRANCH/\//-} myapp:master'
