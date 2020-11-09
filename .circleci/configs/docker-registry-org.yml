@@ -1,0 +1,37 @@
+version: 2.1
+orbs:
+  docker-cache: cci-x/docker-registry-image-cache@0.2.0
+
+workflows:
+  ci:
+    jobs:
+      - build-docker-image:
+          context: envars
+      - use-docker-image:
+          requires:
+            - build-docker-image
+jobs:
+  use-docker-image:
+    docker:
+      - image: fernfernfern/myapp:master
+    steps:
+      - run: echo "I'm inside the container!"
+      
+  build-docker-image:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: docker login
+          command: |
+            echo "$REGISTRY_PASSWORD" | \
+              docker login --username "$REGISTRY_USERNAME" --password-stdin
+      - docker-cache/with-save-restore-images:
+          repository: fernfernfern
+          images: 'myapp:${CIRCLE_BRANCH/\//-} myapp:master'
+          steps:
+            - docker-cache/build:
+                command: 'docker build -t myapp:${CIRCLE_BRANCH/\//-} .'
+      - run:
+          name: Test
+          command: echo run image tests here
