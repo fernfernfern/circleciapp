@@ -4,11 +4,8 @@ version: 2.1
 workflows:
   example-worfklow:
     jobs:
-      - build-docker-image:
-          context: envars
-      - use-docker-image:
-          requires:
-            - build-docker-image
+      - jobbo
+
 jobs:
   jobbo:
     docker:
