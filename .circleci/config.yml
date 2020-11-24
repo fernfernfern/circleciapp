@@ -9,7 +9,7 @@ workflows:
 jobs:
   jobbo:
     docker:
-      - image: cimg/base
+      - image: cimg/base:2020.11
     steps:
       - checkout
       - run: sleep 4
