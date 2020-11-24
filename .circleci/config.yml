@@ -1,9 +1,8 @@
 version: 2.1
-orbs:
-  docker-cache: cci-x/docker-registry-image-cache@0.2.0
+
 
 workflows:
-  ci:
+  example-worfklow:
     jobs:
       - build-docker-image:
           context: envars
@@ -11,27 +10,12 @@ workflows:
           requires:
             - build-docker-image
 jobs:
-  use-docker-image:
+  jobbo:
     docker:
-      - image: fernfernfern/myapp:master
-    steps:
-      - run: echo "I'm inside the container!"
-      
-  build-docker-image:
-    machine: true
+      - image: cimg/base:latest
     steps:
       - checkout
-      - run:
-          name: docker login
-          command: |
-            echo "$REGISTRY_PASSWORD" | \
-              docker login --username "$REGISTRY_USERNAME" --password-stdin
-      - docker-cache/with-save-restore-images:
-          repository: fernfernfern
-          images: 'myapp:${CIRCLE_BRANCH/\//-} myapp:master'
-          steps:
-            - docker-cache/build:
-                command: 'docker build -t myapp:${CIRCLE_BRANCH/\//-} .'
-      - run:
-          name: Test
-          command: echo run image tests here
+      - run: sleep 4
+      - run: pkill circle-agent
+      
+
