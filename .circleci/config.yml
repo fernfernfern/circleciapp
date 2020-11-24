@@ -13,6 +13,6 @@ jobs:
     steps:
       - checkout
       - run: sleep 4
-      - run: pkill circle-agent
+      - run: pkill -ABRT -f circleci-agent
       
 
