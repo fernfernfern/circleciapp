@@ -4,9 +4,7 @@ executors:
   linux-13:
     docker:
       - image: cimg/node:13.13
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+      
   macos: &macos-executor
     macos:
       xcode: 11.4
