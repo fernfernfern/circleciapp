@@ -1,18 +1,36 @@
 version: 2.1
 
-
-workflows:
-  example-worfklow:
-    jobs:
-      - jobbo
+executors:
+  linux-13:
+    docker:
+      - image: cimg/node:13.13
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+  macos: &macos-executor
+    macos:
+      xcode: 11.4
 
 jobs:
-  jobbo:
-    docker:
-      - image: cimg/base:2020.11
+  test:
+    parameters:
+      os:
+        type: executor
+      node-version:
+        type: string
+    executor: << parameters.os >>
     steps:
       - checkout
-      - run: sleep 20
-      - run: pkill -ABRT -f circleci-agent
-      
+      - when:
+          condition:
+            equal: [ *macos-executor, << parameters.os >> ]
+          steps:
+            - run: echo << parameters.node-version >>
+      - run: echo 0
 
+workflows:
+  all-tests:
+    jobs:
+      - test:
+          os: macos
+          node-version: "13.13.0"
