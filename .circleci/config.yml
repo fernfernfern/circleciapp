@@ -32,3 +32,6 @@ workflows:
       - test:
           os: macos
           node-version: "13.13.0"
+      - test:
+          os: linux-13
+          node-version: "13.13.0"
