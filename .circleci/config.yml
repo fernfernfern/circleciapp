@@ -8,4 +8,4 @@ jobs:
       - checkout
       - run:
           name: Simulators
-          command: xcrun simctl list
+          command: xcrun simctl list 
