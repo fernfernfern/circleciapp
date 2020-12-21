@@ -5,9 +5,6 @@ workflows:
     jobs:
       - docker-job:
           name: job 1  # your custom job from your config, that builds your code
-      - test1: # your custom job; runs test suite 1
-          requires: # test1 will not run until the `build` job is completed.
-            - build
       - hold: # <<< A job that will require manual approval in the CircleCI web application.
           type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
           requires: # We only run the "hold" job when test2 has succeeded
