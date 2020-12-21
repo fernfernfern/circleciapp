@@ -1,11 +1,33 @@
 version: 2.1
 
+workflows:
+  build-test-and-approval-deploy:
+    jobs:
+      - build  # your custom job from your config, that builds your code
+      - test1: # your custom job; runs test suite 1
+          requires: # test1 will not run until the `build` job is completed.
+            - build
+      - hold: # <<< A job that will require manual approval in the CircleCI web application.
+          type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
+          requires: # We only run the "hold" job when test2 has succeeded
+           - test2
+      # On approval of the `hold` job, any successive job that requires the `hold` job will run. 
+      # In this case, a user is manually triggering the deploy job.
+      - deploy:
+          requires:
+            - hold
 jobs:
-  build:
-    macos:
-      xcode: 11.3.0
+  use-docker-image:
+    docker:
+      - image: fernfernfern/myapp:master
+    steps:
+      - run: echo "I'm inside the container!"
+      
+  build-docker-image:
+    machine: true
     steps:
       - checkout
+
       - run:
-          name: Simulators
-          command: xcrun simctl list 
+          name: Test
+          command: echo run image tests here
