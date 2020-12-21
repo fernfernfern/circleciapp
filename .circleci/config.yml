@@ -15,6 +15,7 @@ workflows:
       # On approval of the `hold` job, any successive job that requires the `hold` job will run. 
       # In this case, a user is manually triggering the deploy job.
       - docker-job:
+          name: job 2
           requires:
             - hold
 jobs:
@@ -24,11 +25,3 @@ jobs:
     steps:
       - run: echo "I'm inside the container!"
       
-  build-docker-image:
-    machine: true
-    steps:
-      - checkout
-
-      - run:
-          name: Test
-          command: echo run image tests here
