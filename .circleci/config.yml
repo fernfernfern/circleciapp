@@ -13,10 +13,8 @@ jobs:
           name: "Show where we are"
           shell: cmd.exe
           command: |
-            cd ^
-            ECHO.^ We are there
-            ECHO.Directory contents:
-            dir
+            cd^
+            dir^
 
 workflows:
   test_workflow:
