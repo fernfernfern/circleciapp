@@ -1,24 +1,25 @@
 version: 2.1
 
-workflows:
-  holding:
-    jobs:
-      - docker-job:
-          name: job 1  # your custom job from your config, that builds your code
-      - hold: # <<< A job that will require manual approval in the CircleCI web application.
-          type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
-          requires: # We only run the "hold" job when test2 has succeeded
-           - "job 1"
-      # On approval of the `hold` job, any successive job that requires the `hold` job will run. 
-      # In this case, a user is manually triggering the deploy job.
-      - docker-job:
-          name: job 2
-          requires:
-            - hold
+orbs:
+  # The Windows orb give you everything you need to start using the Windows executor.
+  win: circleci/windows@2.2.0
+
 jobs:
-  docker-job:
-    docker:
-      - image: fernfernfern/myapp:master
+  test_job:
+    executor: win/default
     steps:
-      - run: echo "I'm inside the container!"
-      
+      - checkout
+      - run:
+          name: "Show where we are"
+          shell: cmd.exe
+          command: |
+            cd
+            ECHO.^ We are there
+            ECHO.Directory contents:
+            dir
+
+workflows:
+  test_workflow:
+    # Run the welcome/run job in its own container
+    jobs:
+      - test_job
