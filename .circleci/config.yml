@@ -13,9 +13,9 @@ jobs:
           name: "Show where we are"
           shell: cmd.exe
           command: |
-            echo testing^
-            echo again^
-            echo more^
+            echo testing
+            echo again
+            echo more
 
 workflows:
   test_workflow:
