@@ -1,25 +1,124 @@
 version: 2.1
 
-orbs:
-  # The Windows orb give you everything you need to start using the Windows executor.
-  win: circleci/windows@2.2.0
-
-jobs:
-  test_job:
-    executor: win/default
-    steps:
-      - checkout
-      - run:
-          name: "Show where we are"
-          shell: powershell.exe
-          command: |
-            cd
-            ECHO.^ We are there
-            ECHO.Directory contents:
-            dir
+########################################################
+#########--WORKFLOW OF JOBS IN THIS PIPELINE--##########
 
 workflows:
-  test_workflow:
-    # Run the welcome/run job in its own container
+
+  demo-workflow:
     jobs:
-      - test_job
+      - build
+      - test:
+          requires:
+            - build
+      - hold:
+          type: approval
+      - deploy:
+          requires:
+            - build
+            - test
+            - hold
+          filters:
+            branches:
+              only: master
+     
+########################################################
+###################--ORBS TO USE--######################
+
+orbs:
+
+  browser-tools: circleci/browser-tools@1.1.0
+  heroku: circleci/heroku@1.2.3
+
+########################################################
+#################--EXECUTORS TO USE--###################
+
+
+executors:
+
+  nodejs-image:
+      docker:
+        - image: cimg/node:15.4.0
+      resource_class: small
+
+
+########################################################
+############--LIST JOBS IN THIS PIPELINE--##############
+
+jobs:
+
+######--BUILD JOB--######
+  build:
+    executor: nodejs-image
+    steps:
+        - checkout
+
+        - restore_cache:
+            keys:
+              - npm-deps-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+              - npm-deps-v1-{{ .Branch }}
+              - npm-deps-v1
+
+        - run: 
+            name: npm Dependancies
+            command: |
+              npm install
+              npm audit fix
+
+        - save_cache:
+            paths:
+              - ~/.npm
+            key: npm-deps-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            
+        - persist_to_workspace:
+            root: .
+            paths:
+              - node_modules
+              - package-lock.json
+  
+######--TEST JOB--######
+  test:
+    executor: nodejs-image
+    steps:
+        - checkout
+        - attach_workspace:
+            at: .
+
+        - browser-tools/install-chrome
+        
+        - restore_cache:
+            keys:
+              - npm-deps-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+              - npm-deps-v1-{{ .Branch }}
+              - npm-deps-v1
+
+        - run:
+            name: Run Test Scripts
+            command: |
+              npm test
+
+        - store_test_results:
+            path: testResults/reports
+
+        - store_artifacts:
+            path: testResults/reports
+
+######--DEPLOY JOB--######
+  deploy:
+    executor: nodejs-image
+    steps:
+      - checkout
+
+      - run:
+          name: Setup Heroku
+          command: | 
+            sudo curl https://cli-assets.heroku.com/install.sh | sh
+
+      - run:
+          name: Deploy to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master      
+
+
+########################################################
+########################################################
