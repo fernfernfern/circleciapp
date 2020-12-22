@@ -13,7 +13,7 @@ jobs:
           name: "Show where we are"
           shell: cmd.exe
           command: |
-            echo testing ^
+            echo testing^
             echo again^
             echo more^
 
