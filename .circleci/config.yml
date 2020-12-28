@@ -16,9 +16,33 @@ jobs:
             echo testing
             echo again
             echo more
+  test_job2:
+    executor: win/default
+    steps:
+      - checkout
+      - run:
+          name: "Show where we are"
+          shell: cmd.exe
+          command: |
+            echo testing
+            echo again
+            echo more
+  test_job3:
+    executor: win/default
+    steps:
+      - checkout
+      - run:
+          name: "Show where we are"
+          shell: cmd.exe
+          command: |
+            echo testing
+            echo again
+            echo more
 
 workflows:
   test_workflow:
     # Run the welcome/run job in its own container
     jobs:
       - test_job
+      - test_job2
+      - test_job3
