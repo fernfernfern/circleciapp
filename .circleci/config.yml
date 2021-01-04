@@ -13,36 +13,21 @@ jobs:
           name: "Show where we are"
           shell: cmd.exe
           command: |
-            echo testing
-            echo again
-            echo more
-  test_job2:
-    executor: win/default
+            cd
+            ECHO.^ We are there
+            ECHO.Directory contents:
+            dir
+  build-windows:
+    machine:
+      image: windows-server-2019-vs2019:stable
+      shell: bash.exe
+    resource_class: windows.medium
     steps:
-      - checkout
-      - run:
-          name: "Show where we are"
-          shell: cmd.exe
-          command: |
-            echo testing
-            echo again
-            echo more
-  test_job3:
-    executor: win/default
-    steps:
-      - checkout
-      - run:
-          name: "Show where we are"
-          shell: cmd.exe
-          command: |
-            echo testing
-            echo again
-            echo more
+      - run: echo test
+
 
 workflows:
   test_workflow:
     # Run the welcome/run job in its own container
     jobs:
-      - test_job
-      - test_job2
-      - test_job3
+      - build-windows
