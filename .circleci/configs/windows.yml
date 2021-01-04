@@ -17,9 +17,17 @@ jobs:
             ECHO.^ We are there
             ECHO.Directory contents:
             dir
+  build-windows:
+    machine:
+      image: windows-server-2019-vs2019:stable
+      shell: bash.exe
+    resource_class: windows.medium
+    steps:
+      - run: echo test
+
 
 workflows:
   test_workflow:
     # Run the welcome/run job in its own container
     jobs:
-      - test_job
+      - build-windows
