@@ -1,0 +1,16 @@
+parameters:
+  deploy-canary:
+    default: false
+    type: boolean
+
+workflows:
+  my-workflow:
+    when:
+      and:
+        - not:
+            equal: [ main, << pipeline.git.branch >> ]
+        - or:
+            - equal: [ canary, << pipeline.git.tag >> ]
+            - << pipeline.parameters.deploy-canary >>
+
+            

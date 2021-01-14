@@ -1,33 +1,27 @@
 version: 2.1
 
-orbs:
-  # The Windows orb give you everything you need to start using the Windows executor.
-  win: circleci/windows@2.2.0
-
-jobs:
-  test_job:
-    executor: win/default
+jobs: # conditional steps may also be defined in `commands:`
+  job_with_optional_custom_checkout:
+    parameters:
+      custom_checkout:
+        type: string
+        default: ""
+    machine: true
     steps:
-      - checkout
-      - run:
-          name: "Show where we are"
-          shell: cmd.exe
-          command: |
-            cd
-            ECHO.^ We are there
-            ECHO.Directory contents:
-            dir
-  build-windows:
-    machine:
-      image: windows-server-2019-vs2019:stable
-      shell: bash.exe
-    resource_class: windows.medium
-    steps:
-      - run: echo test
-
-
+      - when:
+          condition: 
+            - or:
+              - <<parameters.custom_checkout>>
+              - true
+          steps:
+            - run: echo "my custom checkout"
+      - unless:
+          condition: <<parameters.custom_checkout>>
+          steps:
+            - checkout
 workflows:
-  test_workflow:
-    # Run the welcome/run job in its own container
+  build-test-deploy:
     jobs:
-      - build-windows
+      - job_with_optional_custom_checkout:
+          custom_checkout: ""
+      - job_with_optional_custom_checkout
