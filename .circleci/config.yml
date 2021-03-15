@@ -8,14 +8,24 @@ jobs: # conditional steps may also be defined in `commands:`
         default: ""
     machine: true
     steps:
-      - when:
-          condition: 
-            and: 
-              - <<parameters.custom_checkout>>
-              - False
-          steps:
-            - run: echo "my custom checkout"
-      - run: echo test
+    - when:
+        condition:
+          or:
+            - and:
+              - or:
+                  - and:
+                      - equal: [ master, << pipeline.git.branch >> ]
+                      - equal: [ false, << pipeline.parameters.param1 >> ]
+                  - or:
+                      - not: << pipeline.parameters.param3 >>
+              - or:
+                  - equal: [ false, << pipeline.parameters.param3 >> ]
+                  - or: [ << pipeline.parameters.param1 >>, << pipeline.parameters.param2 >> ]  
+            - or:
+                - equal: [ true, << pipeline.parameters.param4 >> ]
+
+        steps:
+          - run: echo "param 4 is true OR the other nested conditions are true"
 workflows:
   build-test-deploy:
     jobs:
