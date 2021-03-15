@@ -1,34 +1,16 @@
 version: 2.1
 
 jobs: # conditional steps may also be defined in `commands:`
-  job_with_optional_custom_checkout:
-    parameters:
-      custom_checkout:
-        type: string
-        default: ""
-    machine: true
+  test:
+    docker:
+     - image: cimg/base:latest
     steps:
-    - when:
-        condition:
-          or:
-            - and:
-              - or:
-                  - and:
-                      - equal: [ master, << pipeline.git.branch >> ]
-                      - equal: [ false, << pipeline.parameters.param1 >> ]
-                  - or:
-                      - not: << pipeline.parameters.param3 >>
-              - or:
-                  - equal: [ false, << pipeline.parameters.param3 >> ]
-                  - or: [ << pipeline.parameters.param1 >>, << pipeline.parameters.param2 >> ]  
-            - or:
-                - equal: [ true, << pipeline.parameters.param4 >> ]
+      - run: circleci-agent step halt
+      - run: echo that didn't work
+      - run: circleci step halt
+      - run: echo this shouldn't run
 
-        steps:
-          - run: echo "param 4 is true OR the other nested conditions are true"
 workflows:
-  build-test-deploy:
+  test-workflows:
     jobs:
-      - job_with_optional_custom_checkout:
-          custom_checkout: "any non-empty string is truthy"
-      - job_with_optional_custom_checkout
+      - test
