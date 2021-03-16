@@ -17,8 +17,8 @@ jobs: # conditional steps may also be defined in `commands:`
       - run: echo 1
       - run: echo $PATH
       - run: |
-          echo "export PATH=$PATH:/usr/local/bin/flutter/bin" >> $BASH_ENV
-          echo "export SYSTEM_IMAGES='system-images;android-29;default;x86'" >> $BASH_ENV
+          echo 'export PATH=$PATH:/usr/local/bin/flutter/bin' >> $BASH_ENV
+          echo 'export SYSTEM_IMAGES="system-images;android-29;default;x86"' >> $BASH_ENV
           echo $BASH_ENV
           echo $PATH
           cat $BASH_ENV
