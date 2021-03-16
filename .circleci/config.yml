@@ -1,5 +1,14 @@
 version: 2.1
 
+install-flutter: &install-flutter
+  - run: |
+      wget https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_1.22.6-stable.tar.xz && \
+      sudo tar xf flutter_linux_1.22.6-stable.tar.xz -C /usr/local/bin && \
+      export PATH=/usr/local/bin/flutter/bin:$PATH && \
+      rm flutter_linux_1.22.6-stable.tar.xz && \
+      sudo chown -R circleci:circleci /usr/local/bin/flutter && \
+      flutter precache --no-web --no-linux --no-windows --no-fuchsia --no-ios --no-macos
+
 jobs: # conditional steps may also be defined in `commands:`
   test:
     docker:
@@ -12,6 +21,8 @@ jobs: # conditional steps may also be defined in `commands:`
           echo "export SYSTEM_IMAGES=\"system-images;android-29;default;x86\"" >> $BASH_ENV
       - run: echo 1
       - run: echo "don't fail"
+      - run: echo another steps
+      - run: echo whaaaat
 
 workflows:
   test-workflows:
