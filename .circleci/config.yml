@@ -11,8 +11,8 @@ install-flutter: &install-flutter
 
 jobs: # conditional steps may also be defined in `commands:`
   test:
-    docker:
-     - image: circleci/python
+    machine:
+      image: android:202102-01
     steps:
       - run: echo 1
       - run: echo 2
