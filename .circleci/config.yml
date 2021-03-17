@@ -14,7 +14,7 @@ jobs: # conditional steps may also be defined in `commands:`
     machine:
       image: android:202102-01
     steps:
-      - run: echo 1
+      - run: sleep 600
       - run: echo $PATH
       - run: |
           echo 'export PATH=$PATH:/usr/local/bin/flutter/bin' >> $BASH_ENV
