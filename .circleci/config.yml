@@ -3,7 +3,7 @@ version: 2.1
 jobs: # conditional steps may also be defined in `commands:`
   test:
     docker:
-      - image: cimg/python
+      - image: cimg/base:2021.03
     steps:
       - checkout
       - setup_remote_docker
