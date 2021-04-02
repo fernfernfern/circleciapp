@@ -6,8 +6,11 @@ jobs: # conditional steps may also be defined in `commands:`
       - image: cimg/base:2021.03
     steps:
       - checkout
-      - setup_remote_docker
-      - run: docker build .
+      - add_ssh_keys:
+          fingerprints:
+            - 00:8c:fd:eb:92:66:b9:f5:47:07:e3:55:58:02:16:f6
+          
+      - run: echo test
 
 
 workflows:
