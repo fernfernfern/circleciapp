@@ -8,8 +8,8 @@ jobs:
       - image: circleci/node:10-browsers
       - image: circleci/mongo:3.6
         environment:
-          MONGO_INITDB_ROOT_USERNAME: mongouser
-          MONGO_INITDB_ROOT_PASSWORD: mongopass
+          MONGO_USERNAME: mongouser
+          MONGO_PASSWORD: mongopass
     steps:
       - setup_remote_docker
       - run:
