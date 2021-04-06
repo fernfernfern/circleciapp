@@ -22,4 +22,4 @@ jobs:
       - checkout
       - run:
           name: Connect to DB
-          command: mongo --username mongouser --password mongopass --eval "printjson(db.apikeys.count());" dbname
+          command: mongo "localhost:27017" --username mongouser --password mongopass --eval "printjson(db.apikeys.count());" 
