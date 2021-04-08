@@ -1,0 +1,23 @@
+version: 2.1
+
+jobs:
+  example-job:
+    docker:
+      - image: cimg/base:2021.03
+    steps:
+      - run: echo lol
+      - run: echo $SSHKEY | tr -d " \t\n\r"  > testkey64
+      - run: cat testkey64
+      - run: ls
+      - run: openssl enc -a -d -in testkey64
+      - run: ls
+      - run: sudo chmod 600 testkey
+      - run: cat testkey
+      - run: ssh-add -l || true
+      - run: ssh-add testkey
+      - run: ssh-add -l || true
+
+workflows:
+  example-workflow:
+    jobs:
+      - example-job
