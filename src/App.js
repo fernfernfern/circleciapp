@@ -3,7 +3,7 @@ import words from 'random-words'
 import './App.css';
 
 class App extends Component {
-
+ 
   constructor() {
     super()
 
