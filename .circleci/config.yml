@@ -1,25 +1,18 @@
 version: 2.1
-orbs:
-  node: circleci/node@3.0.0
+
 jobs:
-  build:
-    # pre-built images: https://circleci.com/docs/2.0/circleci-images/
+  master:
     docker:
-      - image: circleci/node:10-browsers
-      - image: circleci/mongo:3.6
-        environment:
-          MONGO_USERNAME: mongouser
-          MONGO_PASSWORD: mongopass
+      - image: cimg/base:2021.03
     steps:
-      - setup_remote_docker
-      - run:
-          name: Waiting for Mongo
-          command: dockerize -wait tcp://localhost:27017 -timeout 1m
-      - run:
-          name: Install mongo client
-          command: |
-            sudo apt-get install -y mongodb
-      - checkout
-      - run:
-          name: Connect to DB
-          command: mongo localhost --eval "printjson(db.apikeys.count());" 
+      - run: echo sup
+
+workflows:
+  main:
+    jobs:
+      - master:
+          filters:
+            branches:
+              only: master
+            tags:
+              only: /.*/
