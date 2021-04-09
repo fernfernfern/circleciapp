@@ -11,7 +11,7 @@ jobs:
           root: ~/
           paths:
             - "."
-
+ 
 workflows:
   main:
     jobs:
