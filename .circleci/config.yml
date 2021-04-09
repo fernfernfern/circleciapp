@@ -6,6 +6,11 @@ jobs:
       - image: cimg/base:2021.03
     steps:
       - run: echo sup
+      - checkout
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - "."
 
 workflows:
   main:
