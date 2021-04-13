@@ -1,18 +1,31 @@
 version: 2.1
 
+setup: true
+
+orbs:
+  continuation: circleci/continuation@0.1.2
+
 jobs:
-  master:
-    docker:
-      - image: cimg/base:2021.03
+  setup:
+    executor: continuation/default
     steps:
-      - run: echo sup
+      - checkout
+      - run:
+          name: Generate config
+          command: |
+            cat > main.yml \<<- "EOF"
+            version: 2.1
+            jobs:
+              job1:
+                docker:
+                  - image: cimg/base:2021.04
+                steps:
+                  - run: echo dynamic config!
+            EOF
+      - continuation/continue:
+          configuration_path: main.yml
 
 workflows:
-  main:
+  setup:
     jobs:
-      - master:
-          filters:
-            branches:
-              only: master
-            tags:
-              only: /.*/
+      - setup
