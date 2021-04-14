@@ -1,23 +1,20 @@
 version: 2.1
 
-jobs:
-  example-job:
-    docker:
-      - image: cimg/base:2021.03
-    steps:
-      - run: echo lol
-      - run: echo $SSHKEY | tr -d " \t\n\r"  > testkey64
-      - run: cat testkey64
-      - run: ls
-      - run: openssl enc -a -d -in testkey64
-      - run: ls
-      - run: sudo chmod 600 testkey
-      - run: cat testkey
-      - run: ssh-add -l || true
-      - run: ssh-add testkey
-      - run: ssh-add -l || true
+orbs:
+   azure-acr: circleci/azure-acr@x.y.z
+
+executors:
+ dlc:
+  azure-acr/default:
+    dlc: true
+  
 
 workflows:
-  example-workflow:
+  build-and-publish-docker-image:
     jobs:
-      - example-job
+      - azure-acr/build-and-push-image:
+        executor: dlc
+        login-server-name: exampleregistry.azurecr.io
+        registry-name: exampleregistry
+        repo: example-repository
+        tag: $CIRCLE_TAG

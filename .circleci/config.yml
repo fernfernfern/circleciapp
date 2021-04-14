@@ -5,14 +5,27 @@ jobs:
     docker:
       - image: cimg/base:2021.03
     steps:
-      - run: echo sup
-
+      - checkout
+      - setup_remote_docker
+      - run:
+          command: |
+            while true; do
+              sleep 2
+              ssh remote-docker ps auxwwf
+              echo "======"
+            done
+          background: true
+      - run:
+          command: |
+            while true; do
+              sleep 2
+              ps auxwwf
+              echo "======"
+            done
+          background: true
+      - run: sleep 15
+ 
 workflows:
   main:
     jobs:
-      - master:
-          filters:
-            branches:
-              only: master
-            tags:
-              only: /.*/
+      - master
