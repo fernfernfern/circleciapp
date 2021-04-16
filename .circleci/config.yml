@@ -7,4 +7,4 @@ jobs:
     steps:
       - checkout
       - run: echo export TESTING=thetest >> ~/.bash_profile
-      - run: echo $TESTING
+      - run: echo $TESTING 
