@@ -1,31 +1,10 @@
 version: 2.1
 
 jobs:
-  master:
-    docker:
-      - image: cimg/base:2021.03
+  build:
+    macos:
+      xcode: 12.4.0
     steps:
       - checkout
-      - setup_remote_docker
-      - run:
-          command: |
-            while true; do
-              sleep 2
-              ssh remote-docker ps auxwwf
-              echo "======"
-            done
-          background: true
-      - run:
-          command: |
-            while true; do
-              sleep 2
-              ps auxwwf
-              echo "======"
-            done
-          background: true
-      - run: sleep 15
- 
-workflows:
-  main:
-    jobs:
-      - master
+      - run: echo export TESTING=thetest >> ~/.bash_profile
+      - run: echo $TESTING
