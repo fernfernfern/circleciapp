@@ -1,10 +1,14 @@
 version: 2.1
 
 jobs:
-  build:
-    macos:
-      xcode: 12.4.0
+  job1:
+    machine: true
     steps:
-      - checkout
-      - run: echo export TESTING=thetest >> ~/.bash_profile
-      - run: echo $TESTING  
+      - run: echo heyyy
+
+workflows:
+  deploy-staging:
+    when: 
+      equal: [ staging, << pipeline.git.tag >> ]
+    jobs:
+      - job1
