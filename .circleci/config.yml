@@ -9,6 +9,6 @@ jobs:
 workflows:
   deploy-staging:
     when: 
-      equal: [ staging, << pipeline.git.tag >> ]
+      equal: [ master, << pipeline.git.branch >> ]
     jobs:
       - job1
