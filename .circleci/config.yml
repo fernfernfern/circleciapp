@@ -12,8 +12,4 @@ workflows:
     when:
       equal: [ image, << pipeline.git.tag >> ]
     jobs:
-      - run-first-job:
-          filters:
-            tags:
-              only:
-                - /image/
+      - run-first-job
