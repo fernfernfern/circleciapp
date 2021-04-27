@@ -6,7 +6,7 @@ jobs:
       - image: cimg/base:2021.04
     steps:
       - run: echo weeeeeeeee
-      
+
 workflows:
   run-tests:
     when:
@@ -14,4 +14,5 @@ workflows:
     jobs:
       - run-first-job:
           filters:
-            tags: /image/
+            tags: 
+              - /image/
