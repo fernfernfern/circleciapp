@@ -14,5 +14,6 @@ workflows:
     jobs:
       - run-first-job:
           filters:
-            tags: 
-              - /image/
+            tags:
+              only:
+                - /image/
