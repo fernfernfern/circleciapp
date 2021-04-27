@@ -1,15 +1,11 @@
-version: 2.1
+version: 2
 
-jobs:
-  run-first-job:
-    docker:
-      - image: cimg/base:2021.04
+jobs:  
+  build:
+    docker:  
+      - image: cimg/base:2020.01  
+    parallelism: 50
     steps:
-      - run: echo weeeeeeeee
+      - setup_remote_docker
+      - run: docker volume prune -af
 
-workflows:
-  run-tests:
-    when:
-      equal: [ image, << pipeline.git.tag >> ]
-    jobs:
-      - run-first-job
