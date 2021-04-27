@@ -1,20 +1,15 @@
 version: 2.1
 
-orbs:
-   azure-acr: circleci/azure-acr@x.y.z
-
-executors:
- dlc:
-  azure-acr/default:
-    dlc: true
   
+jobs:
+  jobbo:
+    docker:
+      - image: circleci/node:latest-browsers
+    steps:
+      - run: curl -fsSL https://deno.land/x/install/install.sh | sudo DENO_INSTALL=/usr/local sh
+      - run: deno -v
 
 workflows:
-  build-and-publish-docker-image:
+  work:
     jobs:
-      - azure-acr/build-and-push-image:
-        executor: dlc
-        login-server-name: exampleregistry.azurecr.io
-        registry-name: exampleregistry
-        repo: example-repository
-        tag: $CIRCLE_TAG
+      - jobbo

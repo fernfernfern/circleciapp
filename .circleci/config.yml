@@ -1,10 +1,9 @@
-version: 2.1
-
-jobs:
-  build:
-    macos:
-      xcode: 12.4.0
+version: 2
+ jobs:  
+  docker-purge:
+    docker:  
+      - image: cimg/base:2020.01  
+    parallelism: 50
     steps:
-      - checkout
-      - run: echo export TESTING=thetest >> ~/.bash_profile
-      - run: echo $TESTING  
+      - setup_remote_docker
+      - run: docker volume prune -af
