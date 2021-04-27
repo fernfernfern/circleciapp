@@ -7,5 +7,5 @@ jobs:
     parallelism: 50
     steps:
       - setup_remote_docker
-      - run: docker volume prune -af
+      - run: docker volume prune -f
 
