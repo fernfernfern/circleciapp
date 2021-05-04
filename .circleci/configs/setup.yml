@@ -31,8 +31,5 @@ jobs:
 
 workflows:
   setup:
-    triggers:
-    - schedule:
-        cron: "0 0 * * *"
     jobs:
       - setup
