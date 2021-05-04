@@ -23,6 +23,14 @@ jobs:
                   - run: echo dynamic config!
             workflows:
              workflow1:
+              triggers:
+                - schedule:
+                    cron: "* * * * *"
+                    filters:
+                      branches:
+                        only:
+                          - master
+                          - main
               jobs:
                - job1
             EOF
@@ -31,14 +39,5 @@ jobs:
 
 workflows:
   setup:
-    triggers:
-    - schedule:
-        cron: "* * * * *"
-        filters:
-          branches:
-            only:
-              - master
-              - main
-
     jobs:
       - setup
