@@ -1,0 +1,44 @@
+FROM circleci/python:3.6.8
+
+RUN sudo apt-get -y update \
+    && sudo apt policy openjdk-8-jdk \
+    && sudo apt-get install ca-certificates-java \
+    && sudo update-ca-certificates -f \
+    && sudo apt-get clean && sudo apt-get autoclean
+
+RUN sudo apt-get remove --purge openjdk* java-common default-jdk \
+    && sudo apt-get autoremove --purge \
+    && sudo apt-get install openjdk-8-jdk \
+    && sudo apt-get clean && sudo apt-get autoclean
+
+RUN sudo curl -L -o sbt-$SBT_VERSION.deb https://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb \
+    && sudo dpkg -i sbt-$SBT_VERSION.deb \
+    && sudo rm sbt-$SBT_VERSION.deb \
+    && sudo apt-get clean && sudo apt-get autoclean
+
+RUN sudo apt-get install sbt \
+    && sudo -H pip install awscli --upgrade \
+    && sudo pip install pyspark==3.0.0
+
+RUN sudo apt-get install unzip \
+    && cd ~ && sudo wget https://releases.hashicorp.com/terraform/0.11.7/terraform_0.11.7_linux_amd64.zip \
+    && unzip terraform_0.11.7_linux_amd64.zip \
+    && rm terraform_0.11.7_linux_amd64.zip \
+    && sudo mv terraform /usr/local/bin/ \
+    && terraform --version
+
+RUN cd ~ && sudo wget https://releases.hashicorp.com/terraform/0.12.20/terraform_0.12.20_linux_amd64.zip \
+    && unzip terraform_0.12.20_linux_amd64.zip \
+    && rm terraform_0.12.20_linux_amd64.zip \
+    && sudo mv terraform /usr/local/bin/terraform0.12 \
+    && terraform0.12 --version
+
+RUN curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash - \
+    && sudo apt install nodejs \
+    && sudo apt-get clean && sudo apt-get autoclean
+
+
+RUN sudo wget https://github.com/aiven/terraform-provider-aiven/releases/download/v$TERRAFORM_AIVEN/\
+terraform-provider-aiven-linux-amd64_v$TERRAFORM_AIVEN \
+    && sudo mv terraform-provider-aiven-linux-amd64_v$TERRAFORM_AIVEN /usr/local/bin/terraform-provider-aiven \
+    && sudo chmod +x /usr/local/bin/terraform-provider-aiven
