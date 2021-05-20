@@ -52,12 +52,12 @@ jobs:
           name: Launch Selenium Grid Hub
           background: true
           command: |
-            java selenium-server-standalone-3.141.59.jar -role hub -log /tmp/selenium.log
+            java -Xdiag selenium-server-standalone-3.141.59.jar -role hub -log /tmp/selenium.log
       - run:
           name: Register Selenium Grid Node
           command: |
             sleep 5
-            java –jar ./selenium-server-standalone-3.141.59.jar –role node –hub http://localhost:5786/grid/register -port 1234
+            java –jar selenium-server-standalone-3.141.59.jar –role node –hub http://localhost:5786/grid/register -port 1234
 
 workflows:
   version: 2
