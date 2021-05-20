@@ -46,11 +46,12 @@ jobs:
              sudo update-alternatives --auto java
              sudo apt-get install gnome-terminal
       - run: ls
+      - run: which java
       - run: chmod +x selenium-server-standalone-3.141.59.jar
       - run:
           name: Launch Selenium Grid Hub
           command: |
-            java –jar selenium-server-standalone-3.141.59.jar –role hub -port 5786
+            java -Xdiag -jar selenium-server-standalone-3.141.59.jar -role hub
       - run:
           name: Register Selenium Grid Node
           command: |
