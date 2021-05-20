@@ -52,7 +52,7 @@ jobs:
           name: Launch Selenium Grid Hub
           background: true
           command: |
-            java -jar selenium-server-standalone-3.141.59.jar -role hub -log /tmp/selenium.log
+            java selenium-server-standalone-3.141.59.jar -role hub -log /tmp/selenium.log
       - run:
           name: Register Selenium Grid Node
           command: |
