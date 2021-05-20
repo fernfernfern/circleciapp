@@ -51,7 +51,7 @@ jobs:
       - run:
           name: Launch Selenium Grid Hub
           command: |
-            java -Xdiag -jar selenium-server-standalone-3.141.59.jar -role hub
+            java -Xdiag -jar selenium-server-standalone-3.141.59.jar -role hub -log /tmp/selenium.log
       - run:
           name: Register Selenium Grid Node
           command: |
