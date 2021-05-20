@@ -8,6 +8,7 @@ jobs:
       - run:
           name: Setup environment for tests with Python 3
           command: |
+             sudo apt-get update
              sudo apt install openjdk-11-jre-headless
              sudo apt install openjdk-11-jdk
              wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
