@@ -1,10 +1,62 @@
-version: 2.1
-
+version: 2
 jobs:
   build:
-    # pre-built images: https://circleci.com/docs/2.0/circleci-images/
-    machine:
-      image: ubuntu-2004:202104-01
-
+    machine: 
+      image: ubuntu-1604:202004-01
     steps:
-      - run: echo weeeee
+      - checkout
+      - run:
+          halt_build_on_fail: false
+          name: Setup environment for tests with Python 3
+          command: |
+             pyenv versions
+             pyenv global 3.8.2
+             pip install -U selenium
+             pip install --upgrade pip
+             pip install -U webium
+             pip install allure-pytest==2.7.1
+             pip install pytest==5.4.3
+             pip install pytest-html
+             pip install pyperclip==1.5.27
+             pip install seleniumwrapper
+             pip install selenium-wire
+             pip install pycryptodome
+             pip install requests
+             pip install pytz
+             pip install Faker==3.0.1
+             sudo apt-get update; sudo apt-get install pigz
+             python -c "import selenium; print(selenium.__version__)"
+             sudo apt-add-repository -y ppa:qameta/allure
+             sudo apt-get update
+             sudo apt install xsel
+             sudo apt-get install allure
+             sudo apt-get clean
+             sudo apt-get install dpkg
+             curl -L -o google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+             sudo dpkg -i google-chrome.deb
+             sudo sed -i 's|HERE/chrome\"|HERE/chrome\" --disable-setuid-sandbox|g' /opt/google/chrome/google-chrome
+             rm google-chrome.deb
+             wget https://chromedriver.storage.googleapis.com/89.0.4389.23/chromedriver_linux64.zip
+             unzip chromedriver_linux64.zip
+             sudo cp chromedriver /usr/local/bin/chromedriver
+             sudo apt install openjdk-11-jre-headless
+             sudo apt install openjdk-11-jdk
+             sudo apt-get install openjfx
+             wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
+             sudo update-alternatives --auto java
+             sudo apt-get install gnome-terminal
+      - run: ls
+      - run:
+          name: Launch Selenium Grid Hub
+          command: |
+            java –jar ./selenium-server-standalone-3.141.59.jar –role hub -port 5786
+      - run:
+          name: Register Selenium Grid Node
+          command: |
+            java –jar ./selenium-server-standalone-3.141.59.jar –role node –hub http://localhost:5786/grid/register -port 1234
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
