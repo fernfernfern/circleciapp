@@ -3,8 +3,7 @@ version: 2.1
   
 jobs:
   jobbo:
-    docker:
-      - image: circleci/node:latest-browsers
+    machine: true
     steps:
       - run: echo export JOB_ENVAR='this will exist the whole job' >> $BASH_ENV
       - run: echo $JOB_ENVAR
