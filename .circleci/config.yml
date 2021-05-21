@@ -5,6 +5,7 @@ jobs:
   jobbo:
     machine: true
     steps:
+      - checkout
       - run: echo export JOB_ENVAR='this will exist the whole job' >> $BASH_ENV
       - run: echo $JOB_ENVAR
       - run: export STEP_ENVAR="only exists in this line" && echo $STEP_ENVAR
