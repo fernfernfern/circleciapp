@@ -1,33 +1,17 @@
-version: 2
+version: 2.1
+
+  
 jobs:
-  build:
-    machine: 
-      image: ubuntu-1604:202004-01
+  jobbo:
+    docker:
+      - image: circleci/node:latest-browsers
     steps:
-      - checkout
-      - run:
-          name: Setup environment for tests with Python 3
-          command: |
-             sudo apt-get update
-             sudo apt install openjdk-11-jre-headless
-             sudo apt install openjdk-11-jdk
-             wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
-      - run: ls
-      - run: which java
-      - run: chmod a+rx selenium-server-standalone-3.141.59.jar
-      - run:
-          name: Launch Selenium Grid Hub
-          background: true
-          command: |
-            java -jar selenium-server-standalone-3.141.59.jar -role hub -log /tmp/selenium.log
-      - run:
-          name: Register Selenium Grid Node
-          command: |
-            sleep 5
-            java -Xdiag –jar selenium-server-standalone-3.141.59.jar –role node –hub http://localhost:5786/grid/register -port 1234
+      - run: echo export JOB_ENVAR='this will exist the whole job' >> $BASH_ENV
+      - run: echo $JOB_ENVAR
+      - run: export STEP_ENVAR="only exists in this line" && echo $STEP_ENVAR
+      - run: echo $STEP_ENVAR
 
 workflows:
-  version: 2
-  build:
+  work:
     jobs:
-      - build
+      - jobbo
