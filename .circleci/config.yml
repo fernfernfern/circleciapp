@@ -53,6 +53,8 @@ jobs:
           background: true
           command: |
             java -jar selenium-server-standalone-3.141.59.jar -role hub -log /tmp/selenium.log
+            
+      - run: sleep 10; curl http://localhost:4444/grid/console
       - run:
           name: Register Selenium Grid Node
           command: |
