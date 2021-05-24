@@ -12,6 +12,6 @@ jobs:
       - run: echo $STEP_ENVAR
 
 workflows:
-  work:
+  work: 
     jobs:
       - jobbo
