@@ -17,10 +17,14 @@ jobs:
           name: Launch Selenium Grid Hub
           background: true
           command: |
+            echo $PATH
+            pwd
             java -jar selenium-server-standalone-3.141.59.jar -debug
       - run:
           name: Register Selenium Grid Node
           command: |
+            echo $PATH
+            pwd
             sleep 5
             java –jar selenium-server-standalone-3.141.59.jar –role node –hub http://127.0.0.1:444/grid/register -port 1234
 
