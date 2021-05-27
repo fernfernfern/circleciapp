@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     macos:
-      xcode: 12.5.0
+      xcode: 11.3.0
     steps:
       - checkout
       - run:
