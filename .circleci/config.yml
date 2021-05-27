@@ -1,35 +1,16 @@
-version: 2.1
-
-setup: true
- 
-orbs:
-  continuation: circleci/continuation@0.1.2
-
+version: 2
 jobs:
-  setup:
-    executor: continuation/default
+  build:
+    macos:
+      xcode: 12.5.0
     steps:
       - checkout
       - run:
-          name: Generate config
+          name: Print "Hello World"
           command: |
-            cat > main.yml \<<- "EOF"
-            version: 2.1
-            jobs:
-              job1:
-                docker:
-                  - image: cimg/base:2021.04
-                steps:
-                  - run: echo dynamic config!
-            workflows:
-             workflow1:
-              jobs:
-               - job1
-            EOF
-      - continuation/continue:
-          configuration_path: main.yml
-
+             echo "Hello World"
 workflows:
-  setup:
+  version: 2
+  build:
     jobs:
-      - setup
+      - build
