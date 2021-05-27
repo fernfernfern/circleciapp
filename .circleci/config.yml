@@ -1,35 +1,35 @@
-version: 2
+version: 2.1
+
+setup: true
+ 
+orbs:
+  continuation: circleci/continuation@0.1.2
+
 jobs:
-  build:
-    machine: 
-      image: ubuntu-2004:202104-01
+  setup:
+    executor: continuation/default
     steps:
       - checkout
       - run:
-          halt_build_on_fail: false
-          name: Setup environment for tests with Python 3
+          name: Generate config
           command: |
-             wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
-      - run: ls
-      - run: which java
-      - run: chmod +x selenium-server-standalone-3.141.59.jar
-      - run:
-          name: Launch Selenium Grid Hub
-          background: true
-          command: |
-            echo $PATH
-            pwd
-            java -jar selenium-server-standalone-3.141.59.jar -debug
-      - run:
-          name: Register Selenium Grid Node
-          command: |
-            echo $PATH
-            pwd
-            sleep 5
-            java –jar selenium-server-standalone-3.141.59.jar -debug –role node –hub http://127.0.0.1:444/grid/register -port 1234
+            cat > main.yml \<<- "EOF"
+            version: 2.1
+            jobs:
+              job1:
+                docker:
+                  - image: cimg/base:2021.04
+                steps:
+                  - run: echo dynamic config!
+            workflows:
+             workflow1:
+              jobs:
+               - job1
+            EOF
+      - continuation/continue:
+          configuration_path: main.yml
 
 workflows:
-  version: 2
-  build:
+  setup:
     jobs:
-      - build
+      - setup
