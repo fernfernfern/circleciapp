@@ -1,16 +1,17 @@
-version: 2
+version: 2.1
+
+  
 jobs:
-  build:
-    macos:
-      xcode: 11.3.0
+  jobbo:
+    docker:
+      - image: circleci/node:latest-browsers
+    parallelism: 4
     steps:
-      - checkout
-      - run:
-          name: Print "Hello World"
-          command: |
-             echo "Hello World"
+      - run: echo export JOB_ENVAR='this will exist the whole job' >> $BASH_ENV
+
 workflows:
-  version: 2
-  build:
+  work:
     jobs:
-      - build
+      - jobbo:
+          post-steps:
+            - run: echo ONLY RUN ONCE
