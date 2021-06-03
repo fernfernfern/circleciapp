@@ -1,17 +1,13 @@
 version: 2.1
 
-  
 jobs:
   jobbo:
     docker:
       - image: circleci/node:latest-browsers
-    parallelism: 4
     steps:
-      - run: echo export JOB_ENVAR='this will exist the whole job' >> $BASH_ENV
+      - run: echo $RUN_EXTRA_TESTS
 
 workflows:
   work:
     jobs:
-      - jobbo:
-          post-steps:
-            - run: echo ONLY RUN ONCE
+      - jobbo
