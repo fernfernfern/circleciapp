@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  jobbo:
+  build:
     docker:
       - image: circleci/node:latest-browsers
     steps:
@@ -10,4 +10,4 @@ jobs:
 workflows:
   work:
     jobs:
-      - jobbo
+      - build
