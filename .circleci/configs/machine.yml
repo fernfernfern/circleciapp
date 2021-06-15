@@ -3,8 +3,7 @@ version: 2.1
 jobs:
   build:
     # pre-built images: https://circleci.com/docs/2.0/circleci-images/
-    machine:
-      image: ubuntu-2004:202104-01
+    machine: true
 
     steps:
       - run: echo weeeee
