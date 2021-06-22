@@ -18,11 +18,17 @@ jobs:
           command: |
             which wget
             ls /usr/local/sbin
+            echo /usr/local/sbin
             ls /usr/local/bin
+            echo /usr/local/bin
             ls /usr/sbin
+            echo /usr/sbin
             ls /usr/bin
+            echo /usr/bin
             ls /sbin
+            echo /sbin
             ls /bin
+            echo /bin
             wget https://get.helm.sh/helm-v3.0.1-linux-amd64.tar.gz
             tar xf helm-v3.0.1-linux-amd64.tar.gz
             mv linux-amd64/helm /usr/bin
