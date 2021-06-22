@@ -17,6 +17,12 @@ jobs:
           shell: /bin/bash
           command: |
             which wget
+            ls /usr/local/sbin
+            ls /usr/local/bin
+            ls /usr/sbin
+            ls /usr/bin
+            ls /sbin
+            ls /bin
             wget https://get.helm.sh/helm-v3.0.1-linux-amd64.tar.gz
             tar xf helm-v3.0.1-linux-amd64.tar.gz
             mv linux-amd64/helm /usr/bin
