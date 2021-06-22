@@ -16,7 +16,7 @@ jobs:
       - run:
           shell: /bin/bash
           command: |
-            vp /usr/bin/wget /bin
+            cp /usr/bin/wget /bin
             which wget
             wget https://get.helm.sh/helm-v3.0.1-linux-amd64.tar.gz
             tar xf helm-v3.0.1-linux-amd64.tar.gz
