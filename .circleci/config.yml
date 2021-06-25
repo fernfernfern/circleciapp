@@ -1,25 +1,9 @@
-version: 2
+version: 2.1
+
 jobs:
   build:
-    docker:
-      - image: alpine:latest
+    # pre-built images: https://circleci.com/docs/2.0/circleci-images/
+    machine: true
+
     steps:
-      - run:
-          name: install curl
-          command: apk add curl py-pip git bash git wget
-      - run:
-          name: install which
-          command: apk add which  
-      - run:
-          name: install jq
-          command: apk add jq
-      - run:
-          command: |
-            cp /usr/bin/wget /bin
-            which wget
-            wget https://get.helm.sh/helm-v3.0.1-linux-amd64.tar.gz
-            tar xf helm-v3.0.1-linux-amd64.tar.gz
-            mv linux-amd64/helm /usr/bin
-            helm repo add stable https://charts.helm.sh/stable
-            helm plugin install https://github.com/hypnoglow/helm-s3.git
-            helm repo add hl-stable s3://hl-charts/hl-stable
+      - run: echo weeeee
