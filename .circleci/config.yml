@@ -44,7 +44,7 @@ jobs:
                                 --data-raw '{
                                               "parameters": {
                                                 "setup-config-param": "this is a new strong",
-                                                "other-param": true
+                                                "other": true
                                               }
                                             }'
             workflows:
