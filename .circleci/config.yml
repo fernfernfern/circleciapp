@@ -9,9 +9,9 @@ parameters:
   setup-config-param:
     default: "THIS IS A SETUP CONFIG PARAM"
     type: string
-  other:
-    default: false
-    type: boolean
+  yml:
+    default: "main.yml"
+    type: string
 
 jobs:
   not-setup:
@@ -25,43 +25,11 @@ jobs:
     executor: continuation/default
     steps:
       - checkout
-      - run:
-          name: Generate config
-          command: |
-            cat > main.yml \<<- "EOF"
-            version: 2.1
-            jobs:
-              job1:
-                docker:
-                  - image: cimg/base:2021.04
-                steps:
-                  - run: echo dynamic config!
-                  - run: echo ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME}
-                  - run: | 
-                          curl --location --request POST "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline" \
-                                -u "${CIRCLE_TOKEN}:" \
-                                --header 'Content-Type: application/json' \
-                                --data-raw '{
-                                              "parameters": {
-                                                "setup-config-param": "this is a new strong",
-                                                "other": true
-                                              }
-                                            }'
-            workflows:
-             workflow1:
-              jobs:
-               - job1
-            EOF
+      - run: echo << paramters.setup-config-param >>
       - continuation/continue:
-          configuration_path: main.yml
+          configuration_path: ".circleci/continue/<< parameters.yml >>"
 
 workflows:
-  some-workflow:
-    when:
-      equal: [ << pipeline.parameters.other >>, true]
-    jobs:
-      - not-setup
-
   setup:
     jobs:
       - setup
