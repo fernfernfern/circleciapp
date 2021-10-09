@@ -1,0 +1,22 @@
+version: 2.1
+jobs:
+  job1:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - run: echo dynamic config!
+      - run: echo ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME}
+      - run: | 
+              curl --location --request POST "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline" \
+                    -u "${CIRCLE_TOKEN}:" \
+                    --header 'Content-Type: application/json' \
+                    --data-raw '{
+                                  "parameters": {
+                                    "setup-config-param": "this is a new string",
+                                    "yml": "other.yml"
+                                  }
+                                }'
+workflows:
+  workflow1:
+  jobs:
+    - job1

@@ -1,0 +1,11 @@
+version: 2.1
+jobs:
+  otherjob:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - run: echo OTHER JOB
+workflows:
+  workflow1:
+  jobs:
+    - otherjob
