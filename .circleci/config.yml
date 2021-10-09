@@ -5,11 +5,11 @@ setup: true
 orbs:
   continuation: circleci/continuation@0.1.2
 
-parmeters:
+parameters:
   setup-config-param:
-    defualt: "THIS IS A SETUP CONFIG PARAM"
+    default: "THIS IS A SETUP CONFIG PARAM"
     type: string
-  other-param:
+  other:
     default: false
     type: boolean
 
@@ -57,7 +57,7 @@ jobs:
 workflows:
   some-workflow:
     when:
-      - equal: [<< pipeline.parameters.other-param >>, true]
+      equal: [ << pipeline.parameters.other >>, true]
     jobs:
       - not-setup
 
