@@ -25,7 +25,7 @@ jobs:
     executor: continuation/default
     steps:
       - checkout
-      - run: echo << pipeline.paramters.setup-config-param >>
+      - run: echo << pipeline.parameters.setup-config-param >>
       - continuation/continue:
           configuration_path: ".circleci/continue/<< pipeline.parameters.yml >>"
 
