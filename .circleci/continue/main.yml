@@ -18,5 +18,5 @@ jobs:
                                 }'
 workflows:
   workflow1:
-  jobs:
-    - job1
+    jobs:
+      - job1
