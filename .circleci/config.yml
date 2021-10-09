@@ -1,25 +1,66 @@
-version: 2
+version: 2.1
+
+setup: true
+ 
+orbs:
+  continuation: circleci/continuation@0.1.2
+
+parmeters:
+  setup-config-param:
+    defualt: "THIS IS A SETUP CONFIG PARAM"
+    type: string
+  other-param:
+    default: false
+    type: boolean
+
 jobs:
-  build:
+  not-setup:
     docker:
-      - image: alpine:latest
+      - image: cimg/node:13.13
     steps:
+      - run: echo << pipeline.parameters.setup-config-param >>
+      - run: echo << pipeline.parameters.other >>
+
+  setup:
+    executor: continuation/default
+    steps:
+      - checkout
       - run:
-          name: install curl
-          command: apk add curl py-pip git bash git wget
-      - run:
-          name: install which
-          command: apk add which  
-      - run:
-          name: install jq
-          command: apk add jq
-      - run:
+          name: Generate config
           command: |
-            cp /usr/bin/wget /bin
-            which wget
-            wget https://get.helm.sh/helm-v3.0.1-linux-amd64.tar.gz
-            tar xf helm-v3.0.1-linux-amd64.tar.gz
-            mv linux-amd64/helm /usr/bin
-            helm repo add stable https://charts.helm.sh/stable
-            helm plugin install https://github.com/hypnoglow/helm-s3.git
-            helm repo add hl-stable s3://hl-charts/hl-stable
+            cat > main.yml \<<- "EOF"
+            version: 2.1
+            jobs:
+              job1:
+                docker:
+                  - image: cimg/base:2021.04
+                steps:
+                  - run: echo dynamic config!
+            workflows:
+             workflow1:
+              jobs:
+               - job1
+            EOF
+      - continuation/continue:
+          configuration_path: main.yml
+      - run: |
+        curl --location --request POST 'https://circleci.com/api/v2/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline' \
+              --header 'Circle-Token: ${CIRCLE_TOKEN}' \
+              --header 'Content-Type: application/json' \
+              --data-raw '{
+                            "parameters": {
+                              "setup-config-param": "this is a new strong",
+                              "other-param": true
+                            }
+                          }'
+
+workflows:
+  some-workflow:
+    when:
+      - equal: [<< pipeline.parameters.other-param >>, true]
+    jobs:
+      - not-setup
+
+  setup:
+    jobs:
+      - setup
