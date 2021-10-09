@@ -1,4 +1,13 @@
 version: 2.1
+
+parameters:
+  setup-config-param:
+    default: "THIS IS A SETUP CONFIG PARAM"
+    type: string
+  yml-file:
+    default: "main.yml"
+    type: string
+
 jobs:
   otherjob:
     docker:
