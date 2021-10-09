@@ -1,12 +1,5 @@
 version: 2.1
 
-parameters:
-  setup-config-param:
-    default: "THIS IS A SETUP CONFIG PARAM"
-    type: string
-  trigger-pipeline:
-    default: false
-    type: boolean
 
 jobs:
   job1:
