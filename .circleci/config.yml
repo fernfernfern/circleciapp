@@ -38,7 +38,7 @@ jobs:
                   - run: echo dynamic config!
                   - run: echo ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME}
                   - run: | 
-                          curl --location --request POST 'https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline' \
+                          curl --location --request POST "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline" \
                                 -u "${CIRCLE_TOKEN}:" \
                                 --header 'Content-Type: application/json' \
                                 --data-raw '{
