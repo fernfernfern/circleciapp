@@ -1,4 +1,13 @@
 version: 2.1
+
+parameters:
+  setup-config-param:
+    default: "THIS IS A SETUP CONFIG PARAM"
+    type: string
+  trigger-pipeline:
+    default: false
+    type: boolean
+
 jobs:
   job1:
     docker:
@@ -6,7 +15,9 @@ jobs:
     steps:
       - run: echo dynamic config!
       - run: echo ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME}
-      - run: | 
+      - when:
+          condition: [ << pipeline.parameters.trigger-pipeline >>, true ]
+          step: | 
               curl --location --request POST "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline" \
                     -u "${CIRCLE_TOKEN}:" \
                     --header 'Content-Type: application/json' \

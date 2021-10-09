@@ -9,9 +9,9 @@ parameters:
   setup-config-param:
     default: "THIS IS A SETUP CONFIG PARAM"
     type: string
-  yml-file:
-    default: "main.yml"
-    type: string
+  trigger-pipeline:
+    default: false
+    type: boolean
 
 jobs:
   not-setup:
@@ -27,7 +27,8 @@ jobs:
       - checkout
       - run: echo << pipeline.parameters.setup-config-param >>
       - continuation/continue:
-          configuration_path: ".circleci/continue/<< pipeline.parameters.yml-file >>"
+          configuration_path: ".circleci/continue/main.yml"
+          parameters: '{trigger-pipeline: true}'
 
 workflows:
   setup:
