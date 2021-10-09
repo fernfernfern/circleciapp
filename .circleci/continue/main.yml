@@ -13,7 +13,7 @@ jobs:
                     --data-raw '{
                                   "parameters": {
                                     "setup-config-param": "this is a new string",
-                                    "yml": "other.yml"
+                                    "yml-file": "other.yml"
                                   }
                                 }'
 workflows:
