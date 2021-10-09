@@ -44,15 +44,15 @@ jobs:
       - continuation/continue:
           configuration_path: main.yml
       - run: |
-        curl --location --request POST 'https://circleci.com/api/v2/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline' \
-              --header 'Circle-Token: ${CIRCLE_TOKEN}' \
-              --header 'Content-Type: application/json' \
-              --data-raw '{
-                            "parameters": {
-                              "setup-config-param": "this is a new strong",
-                              "other-param": true
-                            }
-                          }'
+                curl --location --request POST 'https://circleci.com/api/v2/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline' \
+                      --header 'Circle-Token: ${CIRCLE_TOKEN}' \
+                      --header 'Content-Type: application/json' \
+                      --data-raw '{
+                                    "parameters": {
+                                      "setup-config-param": "this is a new strong",
+                                      "other-param": true
+                                    }
+                                  }'
 
 workflows:
   some-workflow:
