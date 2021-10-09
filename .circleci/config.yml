@@ -28,7 +28,7 @@ jobs:
       - run: echo << pipeline.parameters.setup-config-param >>
       - continuation/continue:
           configuration_path: ".circleci/continue/main.yml"
-          parameters: '{trigger-pipeline: true}'
+          parameters: '{"trigger-pipeline": true}'
 
 workflows:
   setup:
